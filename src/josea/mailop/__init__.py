@@ -7,10 +7,11 @@
 # You should have received a copy of the GNU Affero General Public License version 3 along with JoSea. If not, see <https://www.gnu.org/licenses/>. 
 
 from mailbox import MH
+from os import path
 
 class mb():
   def __init__(self, mailfile : str):
-    self.mh = MH(path.dirname(argv[1]))
-    self.message = mh.get(path.basename(argv[1]))
+    self.mh = MH(path.dirname(mailfile), create=False)
+    self.message = self.mh.get(path.basename(mailfile))
 
-  import mailboxoperations
+  import josea.mailop.mailboxoperations
