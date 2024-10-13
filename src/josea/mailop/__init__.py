@@ -6,4 +6,11 @@
 #
 # You should have received a copy of the GNU Affero General Public License version 3 along with JoSea. If not, see <https://www.gnu.org/licenses/>. 
 
-import mailop
+from mailbox import MH
+
+class mb():
+  def __init__(self, mailfile : str):
+    self.mh = MH(path.dirname(argv[1]))
+    self.message = mh.get(path.basename(argv[1]))
+
+  import mailboxoperations
