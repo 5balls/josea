@@ -14,4 +14,4 @@ class mb():
     self.mh = MH(path.dirname(mailfile), create=False)
     self.message = self.mh.get(path.basename(mailfile))
 
-  import josea.mailop.mailboxoperations
+  from josea.mailop.mailboxoperations import find_links_in_html_body

@@ -9,6 +9,7 @@
 
 import email
 from lxml import html, etree
+from email.policy import default
 
 def find_links_in_html_body(self):
   # Get html part of email, convert it to valid xml and try to get all links in
