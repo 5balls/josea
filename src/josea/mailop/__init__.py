@@ -14,7 +14,7 @@ import re
 from josea.mailop.mailboxoperations import link_rule, mail_rule, mail_config
 
 class mb():
-  def __init__(self, mailfile : str):
+  def __init__(self, mailfile : str, debug:bool=False):
     self.mh = MH(path.dirname(mailfile), create=False)
     self.message = self.mh.get(path.basename(mailfile))
     mailconfigs = open("mailconfigs.json", "r")
@@ -23,9 +23,14 @@ class mb():
     links = self.find_links_in_html_body()
     for config in self.configs:
       config_applies = config.applies(self.message)
+      if debug: 
+        print("%s: %s" % (config.name, config_applies))
       if config_applies:
         for link in links:
-          if(config.linkvalid(link["href"],link["text"])):
+          link_valid = config.linkvalid(link["href"],link["text"],debug)
+          if debug: 
+            print('"%s..." "%s": %s' % (link["href"][:10], link["text"], link_valid))
+          if link_valid:
             link.update(configname = config.name)
             self.job_links.append(link)
 
