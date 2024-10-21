@@ -8,13 +8,12 @@
 
 
 import email
-from lxml import html, etree
-from email.policy import default
+from lxml import html
 
 def find_links_in_html_body(self):
   # Get html part of email, convert it to valid xml and try to get all links in
   # plaintext. Return as (possible empty) array.
-  email_message = email.message_from_bytes(self.message.as_bytes(), policy=default)
+  email_message = email.message_from_bytes(self.message.as_bytes(), policy=email.policy.default)
   body = email_message.get_body(('html', 'text')).get_content()
   xmltree = html.fromstring(body)
   links = dict()
