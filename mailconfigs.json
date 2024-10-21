@@ -31,6 +31,36 @@
     },
     {
         "py/object": "josea.mailop.mail_config",
+        "name": "Stepstone Info",
+        "rules": [
+            {
+                "py/object": "josea.mailop.mail_rule",
+                "mailkey": "From",
+                "contains": "<info@jobagent.stepstone.de>",
+                "pattern": null,
+                "negate": false
+            },
+            {
+                "py/object": "josea.mailop.mail_rule",
+                "mailkey": "Message-ID",
+                "contains": "sparkpost>",
+                "pattern": null,
+                "negate": false
+            }
+        ],
+        "validlinks": [
+            {
+                "py/object": "josea.mailop.link_rule",
+                "href_contains": null,
+                "href_pattern": "^https://click\\.stepstone\\.de",
+                "text_contains": "mehr",
+                "text_pattern": null
+            }
+        ]
+
+    },
+    {
+        "py/object": "josea.mailop.mail_config",
         "name": "Template",
         "rules": [
             {
