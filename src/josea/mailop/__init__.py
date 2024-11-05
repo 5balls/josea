@@ -11,7 +11,7 @@ from os import path,getcwd
 import jsonpickle
 import re
 
-from josea.mailop.mailboxoperations import link_rule, mail_rule, mail_config
+from josea.mailop.mailboxoperations import mail_rule, mail_config
 
 class mb():
   def __init__(self, mailfile : str, debug:bool=False):

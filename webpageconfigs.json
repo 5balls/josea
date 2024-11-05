@@ -1,0 +1,63 @@
+[
+{
+    "py/object": "josea.webop.weboperations.webpage_config",
+    "name": "Test",
+    "rules": [
+        {
+            "py/object": "josea.webop.weboperations.webpage_rule",
+            "url_contains": null,
+            "url_pattern": null,
+            "xpath": null,
+            "xpath_text_contains": null,
+            "xpath_text_pattern": null,
+            "actions": [
+                {
+                    "py/object": "josea.webop.weboperations.webpage_action",
+                    "action": {
+                        "py/reduce": [
+                            {
+                                "py/function": "builtins.getattr"
+                            },
+                            {
+                                "py/tuple": [
+                                    {
+                                        "py/type": "josea.webop.weboperations.webpage_action_enum"
+                                    },
+                                    "FOLLOW_LINK"
+                                ]
+                            }
+                        ]
+                    },
+                    "linkrule": {
+                        "py/object": "josea.webop.weboperations.link_rule",
+                        "href_contains": "stepstone.de",
+                        "href_pattern": null,
+                        "text_contains": null,
+                        "text_pattern": null
+                    }
+                },
+                {
+                    "py/object": "josea.webop.weboperations.webpage_action",
+                    "action": {
+                        "py/reduce": [
+                            {
+                                "py/function": "builtins.getattr"
+                            },
+                            {
+                                "py/tuple": [
+                                    {
+                                        "py/type": "josea.webop.weboperations.webpage_action_enum"
+                                    },
+                                    "DOWNLOAD_JSONLD"
+                                ]
+                            }
+                        ]
+                    },
+                    "linkrule": null
+                }
+            ],
+            "negate": false
+        }
+    ]
+}
+]

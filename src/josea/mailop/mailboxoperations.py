@@ -6,72 +6,12 @@
 #
 # You should have received a copy of the GNU Affero General Public License version 3 along with JoSea. If not, see <https://www.gnu.org/licenses/>. 
 
-
 import email
 from lxml import html
 from mailbox import MHMessage
 import re
 
-class link_rule():
-  href_contains : str
-  href_pattern : re.Pattern
-  text_contains : str
-  text_pattern : re.Pattern
-  def __init__(self, href_contains:str = None, href_pattern:str = None, text_contains:str = None, text_pattern:str = None):
-    self.href_contains = href_contains
-    self.href_pattern = href_pattern
-    self.text_contains = text_contains
-    self.text_pattern = text_pattern
-    self.repairpatterns()
-  def repairpatterns(self):
-    if self.href_pattern:
-      if isinstance(self.href_pattern, str):
-        self.href_pattern = re.compile(self.href_pattern)
-    if self.text_pattern:
-      if isinstance(self.text_pattern, str):
-        self.text_pattern = re.compile(self.text_pattern)
-  def applies(self, href:str = None, text:str = None, debug:bool=False):
-    self.repairpatterns()
-    href_applies = None
-    if href and self.href_pattern:
-      if self.href_pattern.search(href):
-        if debug:
-          print('href "%s" matches pattern' % href)
-        href_applies = True
-      else:
-        if debug:
-          print('href "%s" does not match pattern' % href)
-        href_applies = False
-    if href and self.href_contains:
-      href_applies = self.href_contains in href
-      if debug:
-        print('href "%s" contained in "%s": %s' % (self.href_contains, href, href_applies))
-    text_applies = None
-    if text and self.text_pattern:
-      if self.text_pattern.search(text):
-        if debug:
-          print('text "%s" matches pattern' % text)
-        text_applies = True
-      else:
-        if debug:
-           print('text "%s" does not match pattern' % text)
-        text_applies = False
-    if text and self.text_contains:
-      text_applies = self.text_contains in text
-      if debug:
-        print('text "%s" contained in "%s": %s' % (self.text_contains, text, text_applies))
-    if debug:
-      print('href_applies: %s, text_applies %s' % (href_applies,text_applies))
-    if href_applies is not None:
-      if text_applies is not None:
-        return href_applies and text_applies
-      else:
-        return href_applies
-    else:
-      if text_applies is not None:
-        return text_applies
-    return False
-
+from josea.webop import link_rule
 
 class mail_rule():
   mailkey : str
@@ -82,9 +22,8 @@ class mail_rule():
     self.mailkey = mailkey
     self.contains = contains
     self.pattern = pattern
-    if pattern:
-      self.pattern = re.compile(pattern)
     self.negate = negate
+    repairpatterns()
   def repairpatterns(self):
     if self.pattern:
       if isinstance(self.pattern, str):

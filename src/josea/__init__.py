@@ -7,3 +7,4 @@
 # You should have received a copy of the GNU Affero General Public License version 3 along with JoSea. If not, see <https://www.gnu.org/licenses/>. 
 
 import josea.mailop
+import josea.webop

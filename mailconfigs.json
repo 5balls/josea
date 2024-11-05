@@ -20,7 +20,7 @@
         ],
         "validlinks": [
             {
-                "py/object": "josea.mailop.link_rule",
+                "py/object": "josea.webop.link_rule",
                 "href_contains": null,
                 "href_pattern": "^https://www.arbeitsagentur.de\\/jobsuche\\/jobdetail\\/",
                 "text_contains": null,
@@ -49,7 +49,7 @@
         ],
         "validlinks": [
             {
-                "py/object": "josea.mailop.link_rule",
+                "py/object": "josea.webop.link_rule",
                 "href_contains": null,
                 "href_pattern": "^https://click\\.stepstone\\.de",
                 "text_contains": "hier",
@@ -78,7 +78,7 @@
         ],
         "validlinks": [
             {
-                "py/object": "josea.mailop.link_rule",
+                "py/object": "josea.webop.link_rule",
                 "href_contains": null,
                 "href_pattern": "^https://click\\.stepstone\\.de",
                 "text_contains": "mehr",
@@ -103,7 +103,7 @@
         ],
         "validlinks": [
             {
-                "py/object": "josea.mailop.link_rule",
+                "py/object": "josea.webop.link_rule",
                 "href_contains": null,
                 "href_pattern": null,
                 "text_contains": null,
