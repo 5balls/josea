@@ -1,4 +1,6 @@
 ..
+    Copyright 2024 Florian Pesth   
+ 
     This file is part of JoSea.
 
     JoSea is free software: you can redistribute it and/or modify it under the terms of the GNU Affero General Public License version 3 as published by the Free Software Foundation.
