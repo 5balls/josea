@@ -24,7 +24,9 @@ class webpage():
     webpageconfigs = open("webpageconfigs.json", "r")
     self.configs = jsonpickle.decode(webpageconfigs.read())
     for config in self.configs:
-      config_applies = config.applies(self.url, self.page)
+      config_applies = config.applies(self.url, self.page, debug)
       if debug:
         print("%s: %s" % (config.name, config_applies))
+      if config_applies:
+        config.execute_actions(self.page)
       

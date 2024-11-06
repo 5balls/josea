@@ -22,7 +22,7 @@
             {
                 "py/object": "josea.webop.link_rule",
                 "href_contains": null,
-                "href_pattern": "^https://www.arbeitsagentur.de\\/jobsuche\\/jobdetail\\/",
+                "href_pattern": "^https://www\\.arbeitsagentur\\.de\\/jobsuche\\/jobdetail\\/",
                 "text_contains": null,
                 "text_pattern": null
             }

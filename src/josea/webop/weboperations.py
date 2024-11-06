@@ -9,6 +9,8 @@
 import re
 from enum import Enum
 from lxml import html
+import json
+import josea
 
 class link_rule():
   href_contains : str
@@ -60,19 +62,19 @@ class link_rule():
         print('text "%s" contained in "%s": %s' % (self.text_contains, text, text_applies))
     if debug:
       print('href_applies: %s, text_applies %s' % (href_applies,text_applies))
-    if href_applies is not None:
-      if text_applies is not None:
+    if href is not None:
+      if text is not None:
         return href_applies and text_applies
       else:
         return href_applies
     else:
-      if text_applies is not None:
+      if text is not None:
         return text_applies
     return False
 
 # We need this outside of the webpage class because
 # we would get cross dependencies otherwise
-def get_all_links_from_xmlstr(xml:str):
+def get_all_links_from_xmlstr(page:str):
   xml = html.fromstring(page)
   links = list()
   for link in xml.iter('a'):
@@ -89,32 +91,48 @@ def get_all_links_from_webpage(url:dict):
 class webpage_action_enum(Enum):
   FOLLOW_LINK = 1
   DOWNLOAD_JSONLD = 2
+  INSERT_DB = 3
 
 class webpage_action():
   action: webpage_action_enum
   linkrule: link_rule
   data = ''
+  retval = False
+  error: str
   def __init__(self, action:webpage_action_enum, linkrule:link_rule = None):
     self.action = action
     self.linkrule = linkrule
   def execute(self):
-    match action:
+    match self.action:
       case webpage_action_enum.FOLLOW_LINK:
         links = get_all_links_from_xmlstr(self.data)
         for link in links:
-           if linkrule.applies(link['href'],link['text']):
+           if self.linkrule.applies(link['href'],link['text']):
              request = urllib.request.urlopen(url)
              webpage_action.data = request.read().decode("utf-8")
-             return True
-        return False
+             return self.set_retval(True)
+        self.error = "No link rule applied!"
+        return self.set_retval(False)
       case webpage_action_enum.DOWNLOAD_JSONLD:
         xmltreewebpage = html.fromstring(self.data)
         for script in xmltreewebpage.iter("script"):
           if(script.get("type") == "application/ld+json"):
-            webpage_action.data = json.loads(script.text)
-            return True
+            webpage_action.data = script.text
+            return self.set_retval(True)
+        self.error = "Could not get correct script section!"
+        return self.set_retval(False)
+      case webpage_action_enum.INSERT_DB:
+        db = josea.dbop.db()
+        if db.is_duplicate(self.data):
+          self.error = "Jobposting is duplicate of one in database!"
+          return self.set_retval(False)
+        db.add_jobposting(self.data)
+        return self.set_retval(True)
       case _:
-        return False
+        return self.set_retval(False)
+  def set_retval(self,val:bool):
+    webpage_action.retval = val
+    return val
 
 class webpage_rule():
   url_contains: str
@@ -122,16 +140,15 @@ class webpage_rule():
   xpath: str
   xpath_text_contains: str
   xpath_text_pattern: re.Pattern
-  actions: list[webpage_action]
   negate: bool
-  def __init__(self, url_contains:str=None, url_pattern:str=None, xpath:str=None, xpath_text_contains:str=None, xpath_text_pattern:str=None, actions:list[webpage_action]=None, negate:bool=False):
+  def __init__(self, url_contains:str=None, url_pattern:str=None, xpath:str=None, xpath_text_contains:str=None, xpath_text_pattern:str=None, negate:bool=False):
     self.url_contains = url_contains
     self.url_pattern = url_pattern
     self.xpath = xpath
     self.xpath_text_contains = xpath_text_contains
     self.xpath_text_pattern = xpath_text_pattern
-    self.actions = actions
     self.negate = negate
+    self.repairpatterns()
   def repairpatterns(self):
     if self.url_pattern:
       if isinstance(self.url_pattern, str):
@@ -139,8 +156,18 @@ class webpage_rule():
     if self.xpath_text_pattern:
       if isinstance(self.xpath_text_pattern, str):
         self.xpath_text_pattern = re.compile(self.xpath_text_pattern)
-  def applies(self, url:str, xml:str):
+  def applies(self, url:str, xml:str, debug:bool=False):
+    if debug:
+      print("Test rule, url=%s, xml=%s" % (url,xml[:100]))
+    self.repairpatterns()
     xmltree = html.fromstring(xml)
+    if self.url_contains:
+      return self.logic(self.url_contains in url['href'])
+    if self.url_pattern:
+      if self.url_pattern.search(url['href']):
+        return self.logic(True)
+      else:
+        return self.logic(False)
     if self.xpath:
       for matched_xpath in xmltree.findall(self.xpath):
         xpath_text = "".join(matched_xpath.itertext())
@@ -158,19 +185,24 @@ class webpage_rule():
       return not value
     else:
       return value
-  def execute_actions(self, xml:str):
-    webpage_action.data = xml
-    for action in self.actions:
-      action.execute()
 
 class webpage_config:
   name : str
   rules: list[webpage_rule]
-  def __init__(self, name:str=None, rules:list[webpage_rule]=None):
+  actions: list[webpage_action]
+  def __init__(self, name:str=None, rules:list[webpage_rule]=None, actions:list[webpage_action]=None):
     self.name=name
     self.rules = rules
-  def applies(self, url:str, xml:str):
+    self.actions = actions
+  def applies(self, url:str, xml:str,debug:bool=False):
     for rule in self.rules:
-      if not rule.applies(url,xml):
+      if not rule.applies(url,xml,debug):
         return False
     return True
+  def execute_actions(self, xml:str):
+    webpage_action.data = xml
+    for action in self.actions:
+      retval = action.execute()
+      if not retval:
+        print("Could not execute action \"%s\" for config \"%s\"! Errormessage was \"%s\"" % (action.action,self.name,action.error))
+
