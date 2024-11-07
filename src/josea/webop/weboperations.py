@@ -94,6 +94,7 @@ class webpage_action_enum(Enum):
   FOLLOW_LINK = 1
   DOWNLOAD_JSONLD = 2
   INSERT_DB = 3
+  CREATE_TASK = 4
 
 class webpage_action():
   action: webpage_action_enum
@@ -104,7 +105,8 @@ class webpage_action():
   def __init__(self, action:webpage_action_enum, linkrule:link_rule = None):
     self.action = action
     self.linkrule = linkrule
-  def execute(self):
+    self.error = ''
+  def execute(self, message=None):
     match self.action:
       case webpage_action_enum.FOLLOW_LINK:
         links = get_all_links_from_xmlstr(self.data)
@@ -128,7 +130,11 @@ class webpage_action():
         if db.is_duplicate(self.data):
           self.error = "Jobposting is duplicate of one in database!"
           return self.set_retval(False)
-        db.add_jobposting(self.data)
+        db.add_jobposting(self.data, message)
+        return self.set_retval(True)
+      case webpage_action_enum.CREATE_TASK:
+        task = josea.task.task()
+        task.from_jobposting(self.data)
         return self.set_retval(True)
       case _:
         return self.set_retval(False)
@@ -201,10 +207,10 @@ class webpage_config:
       if not rule.applies(url,xml,debug):
         return False
     return True
-  def execute_actions(self, xml:str):
+  def execute_actions(self, xml:str, message=None):
     webpage_action.data = xml
     for action in self.actions:
-      retval = action.execute()
+      retval = action.execute(message)
       if not retval:
         print("Could not execute action \"%s\" for config \"%s\"! Errormessage was \"%s\"" % (action.action,self.name,action.error))
 

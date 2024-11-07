@@ -18,7 +18,7 @@ class webpage():
   url : dict
   page : str
   configs: list[webpage_config]
-  def __init__(self, url:dict, debug:bool=False):
+  def __init__(self, url:dict, message=None, debug:bool=False):
     self.url = url
     request = urllib.request.urlopen(url["href"])
     self.page = request.read().decode("utf-8")
@@ -30,5 +30,5 @@ class webpage():
       if debug:
         print("%s: %s" % (config.name, config_applies))
       if config_applies:
-        config.execute_actions(self.page)
+        config.execute_actions(self.page, message)
       
