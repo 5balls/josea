@@ -12,6 +12,7 @@ from mailbox import MH,MHMessage
 from os import path,getcwd
 import jsonpickle
 import re
+from os.path import expanduser
 
 from josea.mailop.mailboxoperations import mail_rule, mail_config
 
@@ -19,7 +20,7 @@ class mb():
   def __init__(self, mailfile : str, debug:bool=False):
     self.mh = MH(path.dirname(mailfile), create=False)
     self.message = self.mh.get(path.basename(mailfile))
-    mailconfigs = open("~/.josea/mailconfigs.json", "r")
+    mailconfigs = open(expanduser("~/.josea/mailconfigs.json"), "r")
     self.configs = jsonpickle.decode(mailconfigs.read())
     self.job_links = list()
     links = self.find_links_in_html_body()

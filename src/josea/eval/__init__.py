@@ -13,6 +13,7 @@ import json
 import josea
 import requests
 from lxml import html, etree
+from os.path import expanduser
 
 class eval_config():
   knowhow_positive: list[str]
@@ -34,7 +35,7 @@ def filterfunction(character):
 
 class eval():
   def __init__(self, debug:bool=False):
-    evalconfig = open("~/.josea/evalconfig.json", "r")
+    evalconfig = open(expanduser("~/.josea/evalconfig.json"), "r")
     self.config = jsonpickle.decode(evalconfig.read())
   def knowhow(self,jobid:int):
     db = josea.dbop.db()

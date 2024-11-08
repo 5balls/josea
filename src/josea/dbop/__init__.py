@@ -9,13 +9,14 @@
 # You should have received a copy of the GNU Affero General Public License version 3 along with JoSea. If not, see <https://www.gnu.org/licenses/>. 
 
 from josea.dbop.dboperations import db_config
+from os.path import expanduser
 
 import jsonpickle
 
 class db():
   config: db_config
   def __init__(self, debug:bool=False):
-    dbconfig = open("~/.josea/dbconfig.json", "r")
+    dbconfig = open(expanduser("~/.josea/dbconfig.json"), "r")
     self.config = jsonpickle.decode(dbconfig.read())
     self.connect_or_create_database(self.config.name,debug)
   def __del__(self):

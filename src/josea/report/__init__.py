@@ -11,6 +11,10 @@
 import jsonpickle
 import josea
 import json
+from os.path import expanduser
+from lxml import html, etree
+import pypandoc
+import subprocess
 
 class report_config():
   path : str
@@ -19,8 +23,8 @@ class report_config():
 
 class report():
   def __init__(self, debug:bool=False):
-    reportconfig = open("~/.josea/reportconfig.json","r")
-    self.config = jsonpickle.decode(reportconfig)
+    reportconfig = open(expanduser("~/.josea/reportconfig.json"),"r")
+    self.config = jsonpickle.decode(reportconfig.read())
   def title(self,text,level=0):
     levelchar = dict()
     levelchar[0] = "="
@@ -31,7 +35,7 @@ class report():
     return titletext
   def pdf(self,jobid:int):
     db = josea.dbop.db()
-    jsonld = db.jsonld()
+    jsonld = db.jsonld(jobid)
     jobdata = json.loads(jsonld)
     xml_description = html.fromstring(jobdata['description'])
     job_company_filename = ''.join(x for x in jobdata['hiringOrganization']['name'].title() if not x.isspace() and x.isalpha())
@@ -52,16 +56,16 @@ class report():
     rst_description += self.title("Automatisierte Bewertung",1)
     distance_json = db.get_evaldata(jobid,"distance_car_km")
     if distance_json:
-      rst_description += ":Fahrtdistanz:\n  "+str(json.loads(distance_json))+"km\n\n"
+      rst_description += ":Fahrtdistanz:\n  "+str(json.loads(distance_json[0]))+"km\n\n"
     time_json = db.get_evaldata(jobid,"distance_car_minutes")
     if time_json:
-      rst_description += ":Fahrtzeit:\n  "+str(json.loads(time_json))+"min\n\n"
+      rst_description += ":Fahrtzeit:\n  "+str(json.loads(time_json[0]))+"min\n\n"
     job_score = db.get_evaldata(jobid,"knowhow_score")
     if job_score:
-      rst_description += ":Kenntnisse:\n  "+str(json.loads(job_score))+"\n\n"
+      rst_description += ":Kenntnisse:\n  "+str(json.loads(job_score[0]))+"\n\n"
     job_positive_tags_json_string = db.get_evaldata(jobid, "knowhow_positive")
     if job_positive_tags_json_string:
-      job_positive_tags = json.loads(job_positive_tags_json_string)
+      job_positive_tags = json.loads(job_positive_tags_json_string[0])
       if job_positive_tags:
         rst_description += ":Positiv:\n"
         for positive_tag in job_positive_tags:
@@ -69,7 +73,7 @@ class report():
         rst_description += "\n"
     job_negative_tags_json_string = db.get_evaldata(jobid, "knowhow_negative")
     if job_negative_tags_json_string:
-      job_negative_tags = json.loads(job_negative_tags_json_string)
+      job_negative_tags = json.loads(job_negative_tags_json_string[0])
       if job_negative_tags:
         rst_description += ":Negativ:\n"
         for negative_tag in job_negative_tags:
@@ -84,7 +88,7 @@ class report():
     json_short.pop('description')
     rst_description += "   ".join(json.dumps(json_short, indent=4).splitlines(True))
     rst_description += "\n\n"
-    stellenfilename = self.config.path+"/Stelle"+job_company_filename+'_' + job_title_filename + ".pdf"
+    stellenfilename = expanduser(self.config.path)+"/Stelle"+job_company_filename+'_' + job_title_filename + ".pdf"
     try:
       with open(stellenfilename, "wb") as stellenfile:
         m4process = subprocess.run(["rst2pdf","-s","/home/flo/bin/json2stelle.yaml"], input=rst_description.encode("utf8"), stdout=stellenfile)
@@ -92,4 +96,16 @@ class report():
       print("Could not execute rst2pdf!")
       return False
     return True
-
+  def view(self,jobid:int):
+    db = josea.dbop.db()
+    jsonld = db.jsonld(jobid)
+    jobdata = json.loads(jsonld)
+    xml_description = html.fromstring(jobdata['description'])
+    job_company_filename = ''.join(x for x in jobdata['hiringOrganization']['name'].title() if not x.isspace() and x.isalpha())
+    job_title_filename =  ''.join(x for x in jobdata['title'].title() if not x.isspace() and x.isalpha())
+    stellenfilename = expanduser(self.config.path)+"/Stelle"+job_company_filename+'_' + job_title_filename + ".pdf"
+    try:
+      subprocess.run(["evince",stellenfilename])
+    except subprocess.CalledProcessError as error:
+      return False
+    return True

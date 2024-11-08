@@ -11,6 +11,7 @@
 import urllib.request
 from lxml import html
 import jsonpickle
+from os.path import expanduser
 
 from josea.webop.weboperations import get_all_links_from_xmlstr, get_all_links_from_webpage, link_rule, webpage_action, webpage_config, webpage_rule, webpage_action_enum
 
@@ -23,7 +24,7 @@ class webpage():
     request = urllib.request.urlopen(url["href"])
     self.page = request.read().decode("utf-8")
 
-    webpageconfigs = open("~/.josea/webpageconfigs.json", "r")
+    webpageconfigs = open(expanduser("~/.josea/webpageconfigs.json"), "r")
     self.configs = jsonpickle.decode(webpageconfigs.read())
     for config in self.configs:
       config_applies = config.applies(self.url, self.page, debug)
