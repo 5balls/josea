@@ -19,7 +19,7 @@ class mb():
   def __init__(self, mailfile : str, debug:bool=False):
     self.mh = MH(path.dirname(mailfile), create=False)
     self.message = self.mh.get(path.basename(mailfile))
-    mailconfigs = open("mailconfigs.json", "r")
+    mailconfigs = open("~/.josea/mailconfigs.json", "r")
     self.configs = jsonpickle.decode(mailconfigs.read())
     self.job_links = list()
     links = self.find_links_in_html_body()

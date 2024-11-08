@@ -76,7 +76,25 @@ def connect_or_create_database(self,name:str,debug:bool=False):
           containedjob INTEGER NOT NULL,
           FOREIGN KEY (message) references messageids(id),
           FOREIGN KEY (containedjob) references joboffers(id)
-        )""")
+          )""")
+    self.connection.commit()
+  if ("evaldatatypes",) not in tables:
+    self.connection.execute("""
+        CREATE TABLE evaldatatypes(
+          id INTEGER PRIMARY KEY,
+          description TEXT NOT NULL
+          )""")
+    self.connection.commit()
+  if ("evaldata",) not in tables:
+    self.connection.execute("""
+        CREATE TABLE evaldata(
+          id INTEGER PRIMARY KEY,
+          job INTEGER NOT NULL,
+          type INTEGER NOT NULL,
+          data TEXT NOT NULL,
+          FOREIGN KEY (job) references joboffers(id),
+          FOREIGN KEY (type) references evaldatatypes(id)
+          )""")
     self.connection.commit()
 
 def is_duplicate(self,jsonld:str):
@@ -114,3 +132,32 @@ def add_jobposting(self,jsonld:str,message=None):
     if not depid:
       self.connection.execute("INSERT INTO messagejobdependencies (message,containedjob) values (?,?)",(messageidid[0],jobid))
       self.connection.commit()
+  return jobid
+
+def jsonld(self,jobid:int):
+  result = self.connection.execute("SELECT jsonld FROM joboffers WHERE id=?",(jobid,))
+  jsonld = result.fetchone()
+  return jsonld[0]
+
+def add_evaldata(self,jobid:int,description:str,data:str):
+  result = self.connection.execute("SELECT id from evaldatatypes WHERE description=?",(description,))
+  evaldatatypeid = result.fetchone()
+  if not evaldatatypeid:
+    cursor = self.connection.cursor()
+    cursor.execute("INSERT INTO evaldatatypes (description) values (?)",(description,))
+    self.connection.commit()
+    evaldatatypeid = (cursor.lastrowid,)
+  self.connection.execute("INSERT INTO evaldata (job,type,data) values (?,?,?)",(jobid,evaldatatypeid[0],data))
+  self.connection.commit()
+
+def get_evaldata(self,jobid:int,description:str):
+  result = self.connection.execute("SELECT id from evaldatatypes WHERE description=?",(description,))
+  evaldatatypeid = result.fetchone()
+  if not evaldatatypeid:
+    return None
+  result = self.connection.execute("SELECT data FROM evaldata WHERE job=? AND type=?",(jobid,evaldatatypeid[0]))
+  data = result.fetchone()
+  if not data:
+    return None
+  else:
+    return data

@@ -12,6 +12,7 @@ from tasklib import TaskWarrior, Task
 import jsonpickle
 import json
 import datetime
+import josea
 
 class task_config():
   data_location: str
@@ -20,10 +21,12 @@ class task_config():
 
 class task():
   def __init__(self, debug:bool=False):
-    taskconfig = open("taskconfig.json", "r")
+    taskconfig = open("~/.josea/taskconfig.json", "r")
     self.config = jsonpickle.decode(taskconfig.read())
     self.tw = TaskWarrior(data_location=self.config.data_location)
-  def from_jobposting(self,jsonld:str):
+  def from_jobposting(self,jobid:int):
+    db = josea.dbop.db()
+    jsonld = db.jsonld(jobid)
     jobdata = json.loads(jsonld)
     title = jobdata['title']
     try:
@@ -38,7 +41,7 @@ class task():
     city = jobdata['jobLocation']['address']['addressLocality']
     task = Task(self.tw, description = city + ': ' + company + ' - ' + title)
     task['until'] = validthrough
-    task['tags'] = ['Jobsuche','Stepstone','Stellenausschreibung']
+    task['tags'] = ['Jobsuche','Stellenausschreibung']
     task.save()
-    self.tw.execute_command([task['id'],"mod","entry:"+dateposted.strftime("%Y-%m-%d %H:%M:%S"),"rc.dateformat:Y-M-D %H:%N:%S"])
+    self.tw.execute_command([task['id'],"mod","entry:"+dateposted.strftime("%Y-%m-%d %H:%M:%S"),"rc.dateformat:Y-M-D %H:%N:%S","job_dbid:"+str(jobid)])
 

@@ -64,6 +64,25 @@
                                 {
                                     "py/type": "josea.webop.weboperations.webpage_action_enum"
                                 },
+                                "EVALUATE_JOB"
+                            ]
+                        }
+                    ]
+                },
+                "linkrule": null
+            },
+{
+                "py/object": "josea.webop.weboperations.webpage_action",
+                "action": {
+                    "py/reduce": [
+                        {
+                            "py/function": "builtins.getattr"
+                        },
+                        {
+                            "py/tuple": [
+                                {
+                                    "py/type": "josea.webop.weboperations.webpage_action_enum"
+                                },
                                 "CREATE_TASK"
                             ]
                         }

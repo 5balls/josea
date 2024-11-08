@@ -1,0 +1,15 @@
+{
+    "py/object": "josea.eval.eval_config",
+    "knowhow_positive": [
+        "C++",
+        "C"
+    ],
+    "knowhow_negative": [
+        "Java",
+        "rust"
+    ],
+    "latitude":  52.5200,
+    "longitude": 13.4050,
+    "graphhopper_url": "https://example.com",
+    "motis_url": "https://example.com"
+}

@@ -15,7 +15,7 @@ import jsonpickle
 class db():
   config: db_config
   def __init__(self, debug:bool=False):
-    dbconfig = open("dbconfig.json", "r")
+    dbconfig = open("~/.josea/dbconfig.json", "r")
     self.config = jsonpickle.decode(dbconfig.read())
     self.connect_or_create_database(self.config.name,debug)
   def __del__(self):
@@ -26,3 +26,9 @@ class db():
   from josea.dbop.dboperations import is_duplicate
   
   from josea.dbop.dboperations import add_jobposting
+
+  from josea.dbop.dboperations import jsonld
+
+  from josea.dbop.dboperations import add_evaldata
+  
+  from josea.dbop.dboperations import get_evaldata

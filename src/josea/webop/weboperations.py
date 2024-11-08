@@ -95,6 +95,7 @@ class webpage_action_enum(Enum):
   DOWNLOAD_JSONLD = 2
   INSERT_DB = 3
   CREATE_TASK = 4
+  EVALUATE_JOB = 5
 
 class webpage_action():
   action: webpage_action_enum
@@ -109,6 +110,7 @@ class webpage_action():
   def execute(self, message=None):
     match self.action:
       case webpage_action_enum.FOLLOW_LINK:
+        # Downloads webpage and puts webpage content into data
         links = get_all_links_from_xmlstr(self.data)
         for link in links:
            if self.linkrule.applies(link['href'],link['text']):
@@ -118,6 +120,7 @@ class webpage_action():
         self.error = "No link rule applied!"
         return self.set_retval(False)
       case webpage_action_enum.DOWNLOAD_JSONLD:
+        # Downloads jsonld and puts the json string into data
         xmltreewebpage = html.fromstring(self.data)
         for script in xmltreewebpage.iter("script"):
           if(script.get("type") == "application/ld+json"):
@@ -126,13 +129,20 @@ class webpage_action():
         self.error = "Could not get correct script section!"
         return self.set_retval(False)
       case webpage_action_enum.INSERT_DB:
+        # Inserts jsonld into database and puts database id for it in data
         db = josea.dbop.db()
         if db.is_duplicate(self.data):
           self.error = "Jobposting is duplicate of one in database!"
           return self.set_retval(False)
-        db.add_jobposting(self.data, message)
+        webpage_action.data = db.add_jobposting(self.data, message)
+        return self.set_retval(True)
+      case webpage_action_enum.EVALUATE_JOB:
+        # Queries db for jobid and evaluate job
+        evalobj = josea.eval.eval()
+        evalobj.all(self.data)
         return self.set_retval(True)
       case webpage_action_enum.CREATE_TASK:
+        # Queries db for jobid and creates task from it
         task = josea.task.task()
         task.from_jobposting(self.data)
         return self.set_retval(True)

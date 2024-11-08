@@ -23,7 +23,7 @@ class webpage():
     request = urllib.request.urlopen(url["href"])
     self.page = request.read().decode("utf-8")
 
-    webpageconfigs = open("webpageconfigs.json", "r")
+    webpageconfigs = open("~/.josea/webpageconfigs.json", "r")
     self.configs = jsonpickle.decode(webpageconfigs.read())
     for config in self.configs:
       config_applies = config.applies(self.url, self.page, debug)
