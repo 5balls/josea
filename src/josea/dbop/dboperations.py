@@ -17,7 +17,7 @@ class db_config():
     self.name = name
 
 def connect_or_create_database(self,name:str,debug:bool=False):
-  self.connection = sqlite3.connect(name) 
+  self.connection = sqlite3.connect(name)
   result = self.connection.execute("SELECT name from sqlite_master")
   self.connection.commit()
   tables = result.fetchall()
@@ -96,6 +96,16 @@ def connect_or_create_database(self,name:str,debug:bool=False):
           FOREIGN KEY (type) references evaldatatypes(id)
           )""")
     self.connection.commit()
+  if ("notes",) not in tables:
+    self.connection.execute("""
+        CREATE TABLE notes(
+          id INTEGER PRIMARY KEY,
+          job INTEGER NOT NULL,
+          time DATETIME DEFAULT CURRENT_TIMESTAMP NOT NULL,
+          note TEXT NOT NULL,
+          FOREIGN KEY (job) references joboffers(id)
+          )""")
+    self.connection.commit()
 
 def is_duplicate(self,jsonld:str):
   jobdata = json.loads(jsonld)
@@ -161,3 +171,11 @@ def get_evaldata(self,jobid:int,description:str):
     return None
   else:
     return data
+
+def add_note(self,jobid:int,note:str):
+  self.connection.execute("INSERT INTO notes (job,note) values (?,?)",(jobid,note))
+  self.connection.commit()
+
+def get_notes(self,jobid:int):
+  result = self.connection.execute("SELECT time,note FROM notes WHERE job=?",(jobid,))
+  return result.fetchall()

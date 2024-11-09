@@ -33,3 +33,7 @@ class db():
   from josea.dbop.dboperations import add_evaldata
   
   from josea.dbop.dboperations import get_evaldata
+
+  from josea.dbop.dboperations import add_note
+
+  from josea.dbop.dboperations import get_notes

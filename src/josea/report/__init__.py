@@ -79,6 +79,12 @@ class report():
         for negative_tag in job_negative_tags:
           rst_description += "  "+negative_tag+"\n"
         rst_description += "\n"
+    notes = db.get_notes(jobid)
+    if notes:
+        rst_description += self.title("Eigene Notizen",1)
+        for note in notes:
+          rst_description += ":"+note[0]+":\n"
+          rst_description += " "+note[1]+"\n\n"
     rst_description += self.title("Veröffentlichte Beschreibung",1)
     rst_description += pypandoc.convert_text(etree.tostring(xml_description),'rst', format='html')
     rst_description += "\n"
