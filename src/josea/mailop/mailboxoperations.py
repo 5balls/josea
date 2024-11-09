@@ -9,6 +9,7 @@
 # You should have received a copy of the GNU Affero General Public License version 3 along with JoSea. If not, see <https://www.gnu.org/licenses/>. 
 
 import email
+from email.policy import default as default_policy
 from lxml import html
 from mailbox import MHMessage
 import re
@@ -73,7 +74,7 @@ def find_links_in_html_body(self):
   # Get html part of email, convert it to valid xml and try to get all links in
   # plaintext. Return as (possible empty) array.
   links = list()
-  email_message = email.message_from_bytes(self.message.as_bytes(), policy=email.policy.default)
+  email_message = email.message_from_bytes(self.message.as_bytes(),policy=default_policy)
   body = email_message.get_body(('html', 'text'))
   if not body:
     return links

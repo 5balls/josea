@@ -223,4 +223,5 @@ class webpage_config:
       retval = action.execute(message)
       if not retval:
         print("Could not execute action \"%s\" for config \"%s\"! Errormessage was \"%s\"" % (action.action,self.name,action.error))
+        break
 

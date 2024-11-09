@@ -13,6 +13,7 @@ import jsonpickle
 import json
 import datetime
 import josea
+from os.path import expanduser
 
 class task_config():
   data_location: str
@@ -21,7 +22,7 @@ class task_config():
 
 class task():
   def __init__(self, debug:bool=False):
-    taskconfig = open("~/.josea/taskconfig.json", "r")
+    taskconfig = open(expanduser("~/.josea/taskconfig.json"), "r")
     self.config = jsonpickle.decode(taskconfig.read())
     self.tw = TaskWarrior(data_location=self.config.data_location)
   def from_jobposting(self,jobid:int):
@@ -44,4 +45,16 @@ class task():
     task['tags'] = ['Jobsuche','Stellenausschreibung']
     task.save()
     self.tw.execute_command([task['id'],"mod","entry:"+dateposted.strftime("%Y-%m-%d %H:%M:%S"),"rc.dateformat:Y-M-D %H:%N:%S","job_dbid:"+str(jobid)])
+    # Add more meta information if in db:
+    job_score = db.get_evaldata(jobid, "knowhow_score")
+    if job_score:
+      self.tw.execute_command([task['id'],"mod","job_score:"+str(json.loads(job_score[0]))])
+    positive_tags = db.get_evaldata(jobid, "knowhow_positive")
+    if positive_tags:
+      self.tw.execute_command([task['id'],"mod","positive_tags:"+str(json.loads(positive_tags[0]))])
+    negative_tags = db.get_evaldata(jobid, "knowhow_negative")
+    if negative_tags:
+      self.tw.execute_command([task['id'],"mod","negative_tags:"+str(json.loads(negative_tags[0]))])
+
+
 

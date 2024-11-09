@@ -18,7 +18,7 @@ class db():
   def __init__(self, debug:bool=False):
     dbconfig = open(expanduser("~/.josea/dbconfig.json"), "r")
     self.config = jsonpickle.decode(dbconfig.read())
-    self.connect_or_create_database(self.config.name,debug)
+    self.connect_or_create_database(expanduser(self.config.name),debug)
   def __del__(self):
     self.connection.close()
 

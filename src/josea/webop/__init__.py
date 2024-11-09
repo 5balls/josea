@@ -9,6 +9,7 @@
 # You should have received a copy of the GNU Affero General Public License version 3 along with JoSea. If not, see <https://www.gnu.org/licenses/>. 
 
 import urllib.request
+import urllib.error
 from lxml import html
 import jsonpickle
 from os.path import expanduser
@@ -21,15 +22,20 @@ class webpage():
   configs: list[webpage_config]
   def __init__(self, url:dict, message=None, debug:bool=False):
     self.url = url
-    request = urllib.request.urlopen(url["href"])
-    self.page = request.read().decode("utf-8")
+    try:
+      request = urllib.request.urlopen(url["href"])
+      self.page = request.read().decode("utf-8")
 
-    webpageconfigs = open(expanduser("~/.josea/webpageconfigs.json"), "r")
-    self.configs = jsonpickle.decode(webpageconfigs.read())
-    for config in self.configs:
-      config_applies = config.applies(self.url, self.page, debug)
-      if debug:
-        print("%s: %s" % (config.name, config_applies))
-      if config_applies:
-        config.execute_actions(self.page, message)
-      
+      webpageconfigs = open(expanduser("~/.josea/webpageconfigs.json"), "r")
+      self.configs = jsonpickle.decode(webpageconfigs.read())
+      for config in self.configs:
+        config_applies = config.applies(self.url, self.page, debug)
+        if debug:
+          print("%s: %s" % (config.name, config_applies))
+        if config_applies:
+          config.execute_actions(self.page, message)
+    except urllib.error.HTTPError as error:
+      if(error.code == 410):
+        print("Could not download webpage \"" + error.url + "\", seems to be gone already!")
+      else:
+        print(error.reason)
