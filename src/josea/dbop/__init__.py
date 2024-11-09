@@ -37,3 +37,5 @@ class db():
   from josea.dbop.dboperations import add_note
 
   from josea.dbop.dboperations import get_notes
+
+  from josea.dbop.dboperations import discard_job

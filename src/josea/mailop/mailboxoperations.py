@@ -11,8 +11,9 @@
 import email
 from email.policy import default as default_policy
 from lxml import html
-from mailbox import MHMessage
+from mailbox import MHMessage, MH
 import re
+from os.path import expanduser
 
 from josea.webop import link_rule
 
@@ -84,4 +85,31 @@ def find_links_in_html_body(self):
     linktext = "".join(link.itertext())
     links.append({"href": link.get("href"), "text": linktext}) 
   return links
+
+def searchformessage(mailboxdir:str, mail_id:str):
+  mh = MH(mailboxdir)
+  for key, message in mh.iteritems():
+    if str(message['message-id']) == mail_id:
+      return mailboxdir, key
+  folders = mh.list_folders()
+  if folders:
+    for folder in folders:
+      if mailboxdir:
+        mbd, key = searchformessage(mailboxdir + "/" + folder, mail_id)
+        if mbd and key:
+          return mbd, key
+  return None, None
+
+def delete_mail(mailpath:str,mail_id:str):
+  mail_path, mail_to_delete = searchformessage(expanduser(mailpath),mail_id)
+  if mail_to_delete:
+    mh = MH(mail_path)
+    mh.lock()
+    mh.discard(mail_to_delete)
+    mh.unlock()
+    print("Email with id "+mail_id+" deleted.")
+    return True
+  else:
+    print("Could not find mail with id "+mail_id+" for deletion!")
+    return False
 

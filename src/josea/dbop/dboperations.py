@@ -179,3 +179,29 @@ def add_note(self,jobid:int,note:str):
 def get_notes(self,jobid:int):
   result = self.connection.execute("SELECT time,note FROM notes WHERE job=?",(jobid,))
   return result.fetchall()
+
+def discard_job(self,jobid:int):
+  self.add_note(jobid,"Jobangebot verworfen")
+  result = self.connection.execute("SELECT id FROM statuses WHERE name=?",("discarded",))
+  statusid = result.fetchone()
+  self.connection.execute("INSERT INTO history (joboffer,status) values (?,?)",(jobid,statusid[0]))
+  self.connection.commit()
+  obsolete_messageids = []
+  result = self.connection.execute("SELECT message FROM messagejobdependencies WHERE containedjob=?",(jobid,))
+  messages_containing_job = result.fetchall()
+  for message_containing_job in messages_containing_job:
+    result = self.connection.execute("SELECT containedjob FROM messagejobdependencies WHERE message=?",message_containing_job)
+    jobs = result.fetchall()
+    currentmailid_obsolete = True
+    for job in jobs:
+      result = self.connection.execute("SELECT status FROM history WHERE joboffer=?",job)
+      last_status = result.fetchall()[-1][0]
+      if last_status != statusid[0]:
+        currentmailid_obsolete = False
+        break
+    if currentmailid_obsolete:
+      result = self.connection.execute("SELECT messageid FROM messageids WHERE id=?",message_containing_job)
+      obsolete_messageids.append(result.fetchone()[0])
+  return obsolete_messageids
+
+      

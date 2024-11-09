@@ -14,7 +14,7 @@ import jsonpickle
 import re
 from os.path import expanduser
 
-from josea.mailop.mailboxoperations import mail_rule, mail_config
+from josea.mailop.mailboxoperations import mail_rule, mail_config, delete_mail
 
 class mb():
   def __init__(self, mailfile : str, debug:bool=False):
