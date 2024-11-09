@@ -51,10 +51,11 @@ class task():
       self.tw.execute_command([task['id'],"mod","job_score:"+str(json.loads(job_score[0]))])
     positive_tags = db.get_evaldata(jobid, "knowhow_positive")
     if positive_tags:
-      self.tw.execute_command([task['id'],"mod","positive_tags:"+str(json.loads(positive_tags[0]))])
+      self.tw.execute_command([task['id'],"mod","job_positive_tags:"+str(json.loads(positive_tags[0]))])
     negative_tags = db.get_evaldata(jobid, "knowhow_negative")
     if negative_tags:
-      self.tw.execute_command([task['id'],"mod","negative_tags:"+str(json.loads(negative_tags[0]))])
+      self.tw.execute_command([task['id'],"mod","job_negative_tags:"+str(json.loads(negative_tags[0]))])
+
 
 
 
