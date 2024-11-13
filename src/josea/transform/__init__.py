@@ -137,3 +137,4 @@ class transform():
         targetvalue = targetvalue.setdefault(key, {})
       targetvalue[keys[-1]] = rule.value
     targetdata["original"] = sourcedata
+    return json.dumps(targetdata)

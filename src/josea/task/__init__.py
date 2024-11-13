@@ -37,11 +37,13 @@ class task():
         dateposted = datetime.datetime.strptime(jobdata['datePosted'], '%Y-%m-%dT%H:%M:%SZ')
       except ValueError:
         dateposted = datetime.datetime.now()
-    validthrough = datetime.datetime.strptime(jobdata['validThrough'], '%Y-%m-%dT%H:%M:%S.%fZ')
+    if "validThrough" in jobdata:
+      validthrough = datetime.datetime.strptime(jobdata['validThrough'], '%Y-%m-%dT%H:%M:%S.%fZ')
     company = jobdata['hiringOrganization']['name']
     city = jobdata['jobLocation']['address']['addressLocality']
     task = Task(self.tw, description = city + ': ' + company + ' - ' + title)
-    task['until'] = validthrough
+    if "validThrough" in jobdata:
+      task['until'] = validthrough
     task['tags'] = ['Jobsuche','Stellenausschreibung']
     task.save()
     self.tw.execute_command([task['id'],"mod","entry:"+dateposted.strftime("%Y-%m-%d %H:%M:%S"),"rc.dateformat:Y-M-D %H:%N:%S","job_dbid:"+str(jobid)])
