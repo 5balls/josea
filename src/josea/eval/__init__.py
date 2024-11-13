@@ -92,8 +92,11 @@ class eval():
         url = self.config.motis_url
         response = requests.get(url + '/geocode', params={'text': location.split(", ")[0]})
         routingdata = response.json()
-        latitude_from = routingdata[0]['lat']
-        longitude_from = routingdata[0]['lon']
+        if routing and len(routing) > 0:
+          latitude_from = routingdata[0]['lat']
+          longitude_from = routingdata[0]['lon']
+        else:
+          return
 
       if latitude_from and longitude_from:
         latitude_to = self.config.latitude
