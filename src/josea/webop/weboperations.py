@@ -63,9 +63,10 @@ class link_rule():
       if debug:
         print('text "%s" contained in "%s": %s' % (self.text_contains, text, text_applies))
     if debug:
-      print('href_applies: %s, text_applies %s' % (href_applies,text_applies))
-    if href is not None:
-      if text is not None:
+      print('→ href_applies: %s, text_applies: %s' % (href_applies,text_applies))
+      print('→ href: %s, text: %s' % (href,text))
+    if href is not None and ((self.href_contains is not None) or (self.href_pattern is not None)):
+      if text is not None and ((self.text_contains is not None) or (self.text_pattern is not None)):
         return href_applies and text_applies
       else:
         return href_applies
@@ -96,17 +97,20 @@ class webpage_action_enum(Enum):
   INSERT_DB = 3
   CREATE_TASK = 4
   EVALUATE_JOB = 5
+  DOWNLOAD_JSON_AND_TRANSFORM_TO_JSONLD = 6
 
 class webpage_action():
   action: webpage_action_enum
   linkrule: link_rule
+  transform_configfile: str
   data = ''
   retval = False
   error: str
-  def __init__(self, action:webpage_action_enum, linkrule:link_rule = None):
+  def __init__(self, action:webpage_action_enum, linkrule:link_rule = None, transform_configfile:str = None):
     self.action = action
     self.linkrule = linkrule
     self.error = ''
+    self.transform_configfile = transform_configfile
   def execute(self, message=None):
     match self.action:
       case webpage_action_enum.FOLLOW_LINK:
@@ -125,6 +129,16 @@ class webpage_action():
         for script in xmltreewebpage.iter("script"):
           if(script.get("type") == "application/ld+json"):
             webpage_action.data = script.text
+            return self.set_retval(True)
+        self.error = "Could not get correct script section!"
+        return self.set_retval(False)
+      case webpage_action_enum.DOWNLOAD_JSON_AND_TRANSFORM_TO_JSONLD:
+        # Downloads json and transform to jsonld
+        xmltreewebpage = html.fromstring(self.data)
+        for script in xmltreewebpage.iter("script"):
+          if(script.get("type") == "application/json" and script.get("id") == "ng-state"):
+            transform = josea.transform.transform(self.transform_configfile)
+            webpage_action.data = transform.apply(script.text)
             return self.set_retval(True)
         self.error = "Could not get correct script section!"
         return self.set_retval(False)

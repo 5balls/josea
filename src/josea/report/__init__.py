@@ -92,6 +92,10 @@ class report():
     rst_description += ".. code-block:: javascript\n\n   "
     json_short = jobdata
     json_short.pop('description')
+    if "original" in json_short:
+      if "jobdetail" in json_short["original"]:
+        if "stellenangebotsBeschreibung" in json_short["original"]["jobdetail"]:
+          json_short["original"]["jobdetail"].pop("stellenangebotsBeschreibung")
     rst_description += "   ".join(json.dumps(json_short, indent=4).splitlines(True))
     rst_description += "\n\n"
     stellenfilename = expanduser(self.config.path)+"/Stelle"+job_company_filename+'_' + job_title_filename + ".pdf"

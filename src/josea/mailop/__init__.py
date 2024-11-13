@@ -32,7 +32,7 @@ class mb():
         for link in links:
           link_valid = config.linkvalid(link["href"],link["text"],debug)
           if debug: 
-            print('"%s..." "%s": %s' % (link["href"][:10], link["text"], link_valid))
+            print('»"%s..." "%s": %s' % (link["href"][:10], link["text"], link_valid))
           if link_valid:
             link.update(configname = config.name)
             self.job_links.append(link)

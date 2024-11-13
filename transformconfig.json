@@ -1,0 +1,27 @@
+{
+    "py/object": "josea.transform.transform_config",
+    "rules": [
+        {
+            "py/object": "josea.transform.transform_rule",
+            "source": null,
+            "target": null
+        }
+    ],
+    "if_exist_add_rules": [
+        {
+            "py/object": "josea.transform.transform_if_exists_add_rule",
+            "exists": null,
+            "target": null,
+            "value": null
+        }
+    ],
+    "if_value_add_rules": [
+        {
+            "py/object": "josea.transform.transform_if_value_add_rule",
+            "source": null,
+            "source_value": null,
+            "target": null,
+            "target_value": null
+        }
+    ]
+}

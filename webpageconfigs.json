@@ -33,7 +33,7 @@
                 },
                 "linkrule": null
             },
-        {
+            {
                 "py/object": "josea.webop.weboperations.webpage_action",
                 "action": {
                     "py/reduce": [
@@ -52,7 +52,7 @@
                 },
                 "linkrule": null
             },
-{
+            {
                 "py/object": "josea.webop.weboperations.webpage_action",
                 "action": {
                     "py/reduce": [
@@ -71,7 +71,7 @@
                 },
                 "linkrule": null
             },
-{
+            {
                 "py/object": "josea.webop.weboperations.webpage_action",
                 "action": {
                     "py/reduce": [
