@@ -170,7 +170,7 @@ def get_evaldata(self,jobid:int,description:str):
   if not evaldatatypeid:
     return None
   result = self.connection.execute("SELECT data FROM evaldata WHERE job=? AND type=?",(jobid,evaldatatypeid[0]))
-  data = result.fetchone()
+  data = result.fetchall()[-1]
   if not data:
     return None
   else:

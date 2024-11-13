@@ -41,9 +41,15 @@ class eval():
     db = josea.dbop.db()
     jsonld = db.jsonld(jobid)
     jobdata = json.loads(jsonld)
+    xml_title = html.fromstring(jobdata['title'])
+    jobdata_plain_title = ''.join(filter(filterfunction, xml_title.text_content())).replace("\n"," ").replace("\t"," ")
+    jobdatawords = []
+    for jobdataword in jobdata_plain_title.split(" "):
+      if jobdataword != '':
+        if jobdataword != " ":
+          jobdatawords.append(jobdataword.strip().lower())
     xml_description = html.fromstring(jobdata['description'])
     jobdata_plain_description = ''.join(filter(filterfunction, xml_description.text_content())).replace("\n"," ").replace("\t"," ")
-    jobdatawords = []
     for jobdataword in jobdata_plain_description.split(" "):
       if jobdataword != '':
         if jobdataword != " ":
