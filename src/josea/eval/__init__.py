@@ -92,7 +92,7 @@ class eval():
         url = self.config.motis_url
         response = requests.get(url + '/geocode', params={'text': location.split(", ")[0]})
         routingdata = response.json()
-        if routing and len(routing) > 0:
+        if routingdata and len(routingdata) > 0:
           latitude_from = routingdata[0]['lat']
           longitude_from = routingdata[0]['lon']
         else:
@@ -109,11 +109,12 @@ class eval():
         reqdata["profile"] = "car"
         response = requests.post(url, json=reqdata)
         routingdata = response.json()
-        if (len(routingdata['paths']) == 1):
-          distance_km = routingdata['paths'][0]['distance'] / 1000
-          time_minutes = routingdata['paths'][0]['time'] / (1000*60)
-          db.add_evaldata(jobid,"distance_car_km",json.dumps(distance_km))
-          db.add_evaldata(jobid,"distance_car_minutes",json.dumps(time_minutes))
+        if routingdata and "paths" in routingdata:
+          if (len(routingdata['paths']) == 1):
+            distance_km = routingdata['paths'][0]['distance'] / 1000
+            time_minutes = routingdata['paths'][0]['time'] / (1000*60)
+            db.add_evaldata(jobid,"distance_car_km",json.dumps(distance_km))
+            db.add_evaldata(jobid,"distance_car_minutes",json.dumps(time_minutes))
   def all(self,jobid:int):
     self.knowhow(jobid)
     self.distance(jobid)

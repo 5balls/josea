@@ -40,7 +40,11 @@ class task():
     if "validThrough" in jobdata:
       validthrough = datetime.datetime.strptime(jobdata['validThrough'], '%Y-%m-%dT%H:%M:%S.%fZ')
     company = jobdata['hiringOrganization']['name']
-    city = jobdata['jobLocation']['address']['addressLocality']
+    city = ""
+    if "jobLocation" in jobdata:
+      if "address" in jobdata["jobLocation"]:
+        if "addressLocality" in jobdata["jobLocation"]["address"]:
+          city = jobdata['jobLocation']['address']['addressLocality']
     task = Task(self.tw, description = city + ': ' + company + ' - ' + title)
     if "validThrough" in jobdata:
       task['until'] = validthrough
