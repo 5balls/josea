@@ -110,10 +110,14 @@ def connect_or_create_database(self,name:str,debug:bool=False):
 def is_duplicate(self,jsonld:str):
   jobdata = json.loads(jsonld)
   if "hiringOrganization" not in jobdata:
-    print("Could not find hiringOrganization!")
-    print(jobdata)
+    print("Could not find \"hiringOrganization!\" in jsonld!")
+    print(jsonld)
     return False
   company = jobdata["hiringOrganization"]["name"]
+  if "title" not in jobdata:
+    print("Could not find \"title!\" in jsonld!")
+    print(jsonld)
+    return False
   description = jobdata["title"]
   result = self.connection.execute("SELECT id FROM joboffers WHERE company=? and description=?",(company,description))
   ids = result.fetchall()

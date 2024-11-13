@@ -1,0 +1,70 @@
+{
+    "description": "<p>Seit mehr als 40 Jahren geh\u00f6rt LUMINO zu den f\u00fchrenden Unternehmen im<br />Bereich elektronischer Informationssysteme. Im Personennahverkehr<br />verbessern unsere integrierten L\u00f6sungen den Service f\u00fcr Fahrg\u00e4ste und<br />damit die Akzeptanz des \u00f6ffentlichen Nahverkehrs. Als Generalunternehmer<br />wickeln wir hochkomplexe Projekte f\u00fcr dynamische<br />Fahrgastinformationssysteme incl.\u00a0zugeh\u00f6riger Leitsysteme und<br />Leitstellen ab. Systeme von LUMINO sind in nahezu allen nationalen<br />Ballungsr\u00e4umen zu finden. Zur Verst\u00e4rkung unseres Teams suchen wir<br />Sie!</p><br /><p>Softwareentwickler (m/w/d) mit dem Schwerpunkt objektorientierte<br />Programmierung in Delphi</p><br /><p>Sie entwickeln Systemsoftware f\u00fcr zeitgem\u00e4\u00dfe Informationssysteme der<br />n\u00e4chsten Generation unter Einsatz modernster Werkzeuge und Methoden. Sie<br />arbeiten in verschiedenen Bereichen der Softwareentwicklung, von der<br />Systemspezifikation und Anwendungsentwicklung \u00fcber Simulation und Test<br />bis hin zur Produkteinf\u00fchrung.</p><br /><p>Wir erwarten von Ihnen ein erfolgreich abgeschlossenes<br />Ingenieurstudium der Fachrichtung Informatik/Elektrotechnik. Erfahrungen<br />im Bereich der objektorientierten Programmierung sowie der zugeh\u00f6rigen<br />Evaluierungsmethoden sind zwingend erforderlich.</p><br /><p>Ihre Aufgaben:</p><br /><p>\uf0b7 Softwareentwicklung in objektorientierten Programmiersprachen,<br />vorwiegend Delphi (Embarcadero\u00ae RAD Studio), in den Bereichen Backend<br />und GUI-Programmierung</p><br /><p>\uf0b7 Erstellung und Durchf\u00fchrung von Softwarebegleitenden<br />Testaktivit\u00e4ten (z.B. Unit- und Integrationstests, statische<br />Codeanalyse)</p><br /><p>\uf0b7 Entwicklung von interessanter und abwechslungsreicher<br />anwendungsorientierter Systeml\u00f6sungen</p><br /><p>\uf0b7 Erstellung von entwicklungsbegleitender Dokumentation im Rahmen der<br />ISO 9001</p><br /><p>\uf0b7 Mitgestalten von Softwarearchitekturen und -konzepten</p><br /><p>\uf0b7 Software-Design definieren und umsetzen</p><br /><p>\uf0b7 Analysieren und L\u00f6sen komplexer technischer Probleme</p><br /><p>\uf0b7 Bearbeiten von Support-Tickets in Zusammenarbeit mit dem<br />1st-Level-Support f\u00fcr die von Ihnen mitentwickelten Produkte</p><br /><p>\uf0b7 Rationalisierung abstrakter Ausgangssituationen in konkrete<br />Aufgabenpakete</p><br /><p>\uf0b7 Aufwandssch\u00e4tzung, Priorisierung und Organisation eigener<br />Aufgaben</p><br /><p>Ihr Profil:</p><br /><p>\uf0b7 Sie verf\u00fcgen \u00fcber ein abgeschlossenes Studium im Bereich der<br />Informatik/Elektrotechnik sowie Berufserfahrung in der<br />Softwareentwicklung \uf0b7 Sie haben fundierte Kenntnisse in<br />objektorientierten Programmiersprachen, vorzugsweise in Delphi</p><br /><p>\uf0b7 Gute Deutsch- und Englischkenntnisse</p><br /><p>\uf0b7 Sicherer Umgang mit Entwicklungstools wie git,<br />Entwicklungsumgebungen und Issue-Tracking-Systemen</p><br /><p>\uf0b7 Fundierte Kenntnisse im Umgang mit Datenbanken (PostGreSQL)</p><br /><p>\uf0b7 Fundierte Windows &amp; Linux Kenntnisse \uf0b7 Sie sind motiviert,<br />engagiert und wollen mit Ihrem Team gemeinsame Ziele erreichen</p><br /><p>Wir bieten:</p><br /><p>\uf0b7 Abwechslungsreicher, zukunftssicherer Arbeitsplatz in einem<br />modernen, erfolgsorientierten Arbeitsumfeld</p><br /><p>\uf0b7 Gute Verkehrsanbindung und eigene kostenlose Firmenparkpl\u00e4tze</p><br /><p>\uf0b7 Erfolgsorientierte Pr\u00e4mie \uf0b7 M\u00f6glichkeit, zeitweise von zu Hause aus<br />zu arbeiten</p><br /><p>\uf0b7 Halber Arbeitstag am Freitag \uf0b7 Regelm\u00e4\u00dfige Weiterbildungen \uf0b7<br />Zusatzleistungen wie kostenloses Wasser und Kaffee \uf0b7 JobRad</p><br /><p>\uf0b7 Firmenevents</p><br /><p>F\u00fcr diese Aufgabe verf\u00fcgen Sie bestenfalls bereits \u00fcber Erfahrung in<br />einer vergleichbaren Position. Eine selbstst\u00e4ndige Arbeitsweise,<br />Zuverl\u00e4ssigkeit und Verantwortungsbewusstsein zeichnen Sie aus.</p><br /><p>Wenn Sie sich gerne in einem technologie- und wachstumsorientierten<br />Unternehmen mit einem anspruchsvollen Team bewegen, dann richten Sie<br />Ihre Bewerbung unter Angabe Ihrer Gehaltsvorstellung und dem fr\u00fchesten<br />Eintrittstermin per Email an bewerbung@lumino.de oder schriftlich<br />an:</p><br /><p>LUMINO Licht Elektronik GmbH</p><br /><p>Dipl. Ing. Rolf Aengenendt</p><br /><p>EUROPARK Fichtenhain A8</p><br /><p>47807 Krefeld</p><br />",
+    "hiringOrganization": {
+        "name": "Lumino Licht Elektronik GmbH",
+        "@type": "Organization"
+    },
+    "jobLocation": {
+        "address": {
+            "postalCode": "47807",
+            "addressLocality": "Krefeld",
+            "addressRegion": "NORDRHEIN_WESTFALEN",
+            "addressCountry": "DEUTSCHLAND",
+            "@type": "PostalAddress"
+        },
+        "geo": {
+            "latitude": 51.2926781,
+            "longitude": 6.5592307,
+            "@type": "GeoCoordinates"
+        },
+        "@type": "Place"
+    },
+    "datePosted": "2024-08-29",
+    "employmentType": "FULL_TIME",
+    "original": {
+        "jobdetail": {
+            "stellenangebotsart": "ARBEIT",
+            "stellenangebotsBeschreibung": "Seit mehr als 40 Jahren geh\u00f6rt LUMINO zu den f\u00fchrenden Unternehmen im Bereich elektronischer Informationssysteme. Im Personennahverkehr verbessern unsere integrierten L\u00f6sungen den Service f\u00fcr Fahrg\u00e4ste und damit die Akzeptanz des \u00f6ffentlichen Nahverkehrs. Als Generalunternehmer wickeln wir hochkomplexe Projekte f\u00fcr dynamische Fahrgastinformationssysteme incl. zugeh\u00f6riger Leitsysteme und Leitstellen ab. Systeme von LUMINO sind in nahezu allen nationalen Ballungsr\u00e4umen zu finden. Zur Verst\u00e4rkung unseres Teams suchen wir Sie!\n\nSoftwareentwickler (m/w/d) mit dem Schwerpunkt objektorientierte Programmierung in Delphi\n\nSie entwickeln Systemsoftware f\u00fcr zeitgem\u00e4\u00dfe Informationssysteme der n\u00e4chsten Generation unter Einsatz modernster Werkzeuge und Methoden. Sie arbeiten in verschiedenen Bereichen der Softwareentwicklung, von der Systemspezifikation und Anwendungsentwicklung \u00fcber Simulation und Test bis hin zur Produkteinf\u00fchrung.\n\nWir erwarten von Ihnen ein erfolgreich abgeschlossenes Ingenieurstudium der Fachrichtung Informatik/Elektrotechnik. Erfahrungen im Bereich der objektorientierten Programmierung sowie der zugeh\u00f6rigen Evaluierungsmethoden sind zwingend erforderlich.\n\nIhre Aufgaben:\n\n\uf0b7 Softwareentwicklung in objektorientierten Programmiersprachen, vorwiegend Delphi (Embarcadero\u00ae RAD Studio), in den Bereichen Backend und GUI-Programmierung\n\n\uf0b7 Erstellung und Durchf\u00fchrung von Softwarebegleitenden Testaktivit\u00e4ten (z.B. Unit- und Integrationstests, statische Codeanalyse)\n\n\uf0b7 Entwicklung von interessanter und abwechslungsreicher anwendungsorientierter Systeml\u00f6sungen\n\n\uf0b7 Erstellung von entwicklungsbegleitender Dokumentation im Rahmen der ISO 9001\n\n\uf0b7 Mitgestalten von Softwarearchitekturen und -konzepten\n\n\uf0b7 Software-Design definieren und umsetzen\n\n\uf0b7 Analysieren und L\u00f6sen komplexer technischer Probleme\n\n\uf0b7 Bearbeiten von Support-Tickets in Zusammenarbeit mit dem 1st-Level-Support f\u00fcr die von Ihnen mitentwickelten Produkte\n\n\uf0b7 Rationalisierung abstrakter Ausgangssituationen in konkrete Aufgabenpakete\n\n\uf0b7 Aufwandssch\u00e4tzung, Priorisierung und Organisation eigener Aufgaben\n\nIhr Profil:\n\n\uf0b7 Sie verf\u00fcgen \u00fcber ein abgeschlossenes Studium im Bereich der Informatik/Elektrotechnik sowie Berufserfahrung in der Softwareentwicklung \uf0b7 Sie haben fundierte Kenntnisse in objektorientierten Programmiersprachen, vorzugsweise in Delphi \n\n\uf0b7 Gute Deutsch- und Englischkenntnisse \n\n\uf0b7 Sicherer Umgang mit Entwicklungstools wie git, Entwicklungsumgebungen und Issue-Tracking-Systemen\n\n\uf0b7 Fundierte Kenntnisse im Umgang mit Datenbanken (PostGreSQL)\n\n\uf0b7 Fundierte Windows & Linux Kenntnisse \uf0b7 Sie sind motiviert, engagiert und wollen mit Ihrem Team gemeinsame Ziele erreichen\n\nWir bieten:\n\n\uf0b7 Abwechslungsreicher, zukunftssicherer Arbeitsplatz in einem modernen, erfolgsorientierten Arbeitsumfeld\n\n\uf0b7 Gute Verkehrsanbindung und eigene kostenlose Firmenparkpl\u00e4tze\n\n\uf0b7 Erfolgsorientierte Pr\u00e4mie \uf0b7 M\u00f6glichkeit, zeitweise von zu Hause aus zu arbeiten\n\n\uf0b7 Halber Arbeitstag am Freitag \uf0b7 Regelm\u00e4\u00dfige Weiterbildungen \uf0b7 Zusatzleistungen wie kostenloses Wasser und Kaffee \uf0b7 JobRad\n\n\uf0b7 Firmenevents\n\nF\u00fcr diese Aufgabe verf\u00fcgen Sie bestenfalls bereits \u00fcber Erfahrung in einer vergleichbaren Position. Eine selbstst\u00e4ndige Arbeitsweise, Zuverl\u00e4ssigkeit und Verantwortungsbewusstsein zeichnen Sie aus.\n\nWenn Sie sich gerne in einem technologie- und wachstumsorientierten Unternehmen mit einem anspruchsvollen Team bewegen, dann richten Sie Ihre Bewerbung unter Angabe Ihrer Gehaltsvorstellung und dem fr\u00fchesten Eintrittstermin per Email an bewerbung@lumino.de oder schriftlich an:\n\nLUMINO Licht Elektronik GmbH\n\nDipl. Ing. Rolf Aengenendt\n\nEUROPARK Fichtenhain A8\n\n47807 Krefeld",
+            "arbeitszeitHeimarbeitTelearbeit": false,
+            "arbeitszeitSchichtNachtWochenende": false,
+            "arbeitszeitTeilzeitAbend": false,
+            "arbeitszeitTeilzeitNachmittag": false,
+            "arbeitszeitTeilzeitVormittag": false,
+            "arbeitszeitTeilzeitFlexibel": false,
+            "arbeitszeitVollzeit": true,
+            "eintrittszeitraum": {
+                "von": "2024-10-23"
+            },
+            "vertragsdauer": "KEINE_ANGABE",
+            "istGeringfuegigeBeschaeftigung": false,
+            "istBehinderungGefordert": false,
+            "stellenlokationen": [
+                {
+                    "adresse": {
+                        "strasse": "Europark Fichtenhain A",
+                        "hausnummer": "8",
+                        "plz": "47807",
+                        "ort": "Krefeld",
+                        "region": "NORDRHEIN_WESTFALEN",
+                        "land": "DEUTSCHLAND"
+                    },
+                    "breite": 51.2926781,
+                    "laenge": 6.5592307
+                }
+            ],
+            "istPrivateArbeitsvermittlung": false,
+            "istArbeitnehmerUeberlassung": false,
+            "veroeffentlichungszeitraum": {
+                "von": "2024-08-29"
+            },
+            "aenderungsdatum": "2024-10-23T06:57:17.681+00:00",
+            "istBetreut": true,
+            "hauptberuf": "Softwareentwickler/in",
+            "firma": "Lumino Licht Elektronik GmbH",
+            "arbeitgeberKundennummerHash": "esrIxiphOMZaM7hEx7x6agXfFo4FRxVZcmGk67f5340=",
+            "allianzpartnerUrl": "http://www.arbeitsagentur.de",
+            "allianzpartnerName": "arbeitsagentur.de",
+            "referenznummer": "10000-1199932750-S"
+        }
+    }
+}
