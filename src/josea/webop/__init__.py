@@ -35,7 +35,7 @@ class webpage():
         if config_applies:
           config.execute_actions(self.page, message)
     except urllib.error.HTTPError as error:
-      if(error.code == 410):
+      if (error.code == 410) or (error.code == 404):
         print("Could not download webpage \"" + error.url + "\", seems to be gone already!")
       else:
         print(error.reason)

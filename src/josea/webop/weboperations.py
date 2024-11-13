@@ -138,8 +138,13 @@ class webpage_action():
         for script in xmltreewebpage.iter("script"):
           if(script.get("type") == "application/json" and script.get("id") == "ng-state"):
             transform = josea.transform.transform(self.transform_configfile)
-            webpage_action.data = transform.apply(script.text)
-            return self.set_retval(True)
+            retval, data = transform.apply(script.text)
+            if retval:
+              webpage_action.data = data
+              return self.set_retval(True)
+            else:
+              self.error = "Jobposting seems to be gone"
+              return self.set_retval(False)
         self.error = "Could not get correct script section!"
         return self.set_retval(False)
       case webpage_action_enum.INSERT_DB:

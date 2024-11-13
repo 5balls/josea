@@ -1,0 +1,3 @@
+Could not execute action "webpage_action_enum.INSERT_DB" for config "Agentur für Arbeit"! Errormessage was "Jobposting is duplicate of one in database!"
+Could not find hiringOrganization!
+{'original': {'jobdetail-error': 404}}

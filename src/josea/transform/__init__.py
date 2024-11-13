@@ -42,14 +42,25 @@ class transform_if_value_add_rule():
     self.target = target
     self.target_value = target_value
 
+class transform_if_value_fail_rule():
+  source: str
+  source_value: str
+  def __init__(self,source:str=None,source_value:str=None):
+    self.source = source
+    self.source_value = source_value
+
+
 class transform_config():
   rules: list[transform_rule]
   if_exist_add_rules: list[transform_if_exists_add_rule]
   if_value_add_rules: list[transform_if_value_add_rule]
+  if_value_fail_rules: list[transform_if_value_fail_rule]
   def __init__(self,rules:list[transform_rule]=None,if_exist_add_rules:list[transform_if_exists_add_rule]=None,if_value_add_rules:list[transform_if_value_add_rule]=None):
     self.rules = rules
     self.if_exist_add_rules = if_exist_add_rules
     self.if_value_add_rules = if_value_add_rules
+    self.if_value_fail_rules = if_value_fail_rules
+
 
 class transform():
   config: transform_config
@@ -62,6 +73,23 @@ class transform():
     # implementation will have to do
     sourcedata = json.loads(sourcejson)
     targetdata = dict()
+    for rule in self.config.if_value_fail_rules:
+      value = sourcedata
+      # Recursively resolve key path if possible:
+      keys = rule.source.split("/")[1:]
+      if keys:
+        for key in keys:
+          if value:
+            if key.isnumeric():
+              value = value[int(key)]
+            else:
+              value = value.get(key, None)
+        if not value:
+          continue
+      else:
+        continue
+      if value == rule.source_value:
+        return False, json.dumps(targetdata)
     for rule in self.config.rules:
       value = sourcedata
       # Recursively resolve key path if possible:
@@ -137,4 +165,4 @@ class transform():
         targetvalue = targetvalue.setdefault(key, {})
       targetvalue[keys[-1]] = rule.value
     targetdata["original"] = sourcedata
-    return json.dumps(targetdata)
+    return True, json.dumps(targetdata)
