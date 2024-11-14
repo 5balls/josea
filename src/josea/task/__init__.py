@@ -52,9 +52,18 @@ class task():
     task.save()
     self.tw.execute_command([task['id'],"mod","entry:"+dateposted.strftime("%Y-%m-%d %H:%M:%S"),"rc.dateformat:Y-M-D %H:%N:%S","job_dbid:"+str(jobid)])
     # Add more meta information if in db:
-    job_score = db.get_evaldata(jobid, "knowhow_score")
-    if job_score:
-      self.tw.execute_command([task['id'],"mod","job_score:"+str(json.loads(job_score[0]))])
+    knowhow_score = db.get_evaldata(jobid, "knowhow_score")
+    if not knowhow_score:
+      knowhow_score = 1.0
+    else:
+      knowhow_score = float(knowhow_score[0])
+    distance_km = db.get_evaldata(jobid, "distance_car_km")
+    if distance_km:
+      distance_score = 1.0 - float(distance_km[0]) / db.get_max_evaldata("distance_car_km")
+    else:
+      distance_score = 1.0
+    job_score = knowhow_score * distance_score
+    self.tw.execute_command([task['id'],"mod","job_score:"+str(job_score)])
     positive_tags = db.get_evaldata(jobid, "knowhow_positive")
     if positive_tags:
       self.tw.execute_command([task['id'],"mod","job_positive_tags:"+str(json.loads(positive_tags[0]))])

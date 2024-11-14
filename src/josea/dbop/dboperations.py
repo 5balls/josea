@@ -180,6 +180,18 @@ def get_evaldata(self,jobid:int,description:str):
   else:
     return data
 
+def get_max_evaldata(self,description:str):
+  result = self.connection.execute("SELECT id from evaldatatypes WHERE description=?",(description,))
+  evaldatatypeid = result.fetchone()
+  if not evaldatatypeid:
+    return None
+  result = self.connection.execute("SELECT max(CAST(data AS FLOAT)) FROM evaldata WHERE type=?",evaldatatypeid)
+  data = result.fetchone()
+  if not data:
+    return None
+  else:
+    return float(data[0])
+
 def add_note(self,jobid:int,note:str):
   self.connection.execute("INSERT INTO notes (job,note) values (?,?)",(jobid,note))
   self.connection.commit()
