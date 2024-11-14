@@ -1,0 +1,16 @@
+{
+    "py/object": "josea.application.application_config",
+    "outputpath": "~/src/own/bewerbungen/offen",
+    "coverletter_m4file": "~/src/own/bewerbungen/templates/Bewerbung.m4",
+    "coverletter_sections": [
+        {
+            "py/object": "josea.application.coverletter_section",
+            "keywords": [
+                "C++",
+                "objektorientiert"
+            ],
+            "text": "Deswegen bin ich ein toller C++ Programmierer",
+            "sectionid": "cpp"
+        }
+    ]
+}

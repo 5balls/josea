@@ -224,4 +224,9 @@ def discard_job(self,jobid:int):
       obsolete_messageids.append(result.fetchone()[0])
   return obsolete_messageids
 
-      
+def apply_job(self,jobid:int):
+  self.add_note(jobid,"Auf Stelle beworben")
+  result = self.connection.execute("SELECT id FROM statuses WHERE name=?",("applied",))
+  statusid = result.fetchone()
+  self.connection.execute("INSERT INTO history (joboffer,status) values (?,?)",(jobid,statusid[0]))
+  self.connection.commit()
