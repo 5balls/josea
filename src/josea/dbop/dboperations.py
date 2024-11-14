@@ -174,11 +174,11 @@ def get_evaldata(self,jobid:int,description:str):
   if not evaldatatypeid:
     return None
   result = self.connection.execute("SELECT data FROM evaldata WHERE job=? AND type=?",(jobid,evaldatatypeid[0]))
-  data = result.fetchall()[-1]
+  data = result.fetchall()
   if not data:
     return None
   else:
-    return data
+    return data[-1]
 
 def get_max_evaldata(self,description:str):
   result = self.connection.execute("SELECT id from evaldatatypes WHERE description=?",(description,))
