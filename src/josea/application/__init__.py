@@ -13,6 +13,7 @@ import josea
 import json
 from os.path import expanduser
 import subprocess
+import requests
 
 class coverletter_section():
   keywords: list[str]
@@ -27,10 +28,12 @@ class application_config():
   outputpath : str
   coverletter_m4file : str
   coverletter_sections : list[coverletter_section]
-  def __init__(self, outputpath:str=None, coverletter_m4file:str=None, coverletter_sections:list[coverletter_section]=None):
+  motis_url: str
+  def __init__(self, outputpath:str=None, coverletter_m4file:str=None, coverletter_sections:list[coverletter_section]=None,motis_url:str=None):
     self.outputpath = outputpath
     self.coverletter_m4file = coverletter_m4file
     self.coverletter_sections = coverletter_sections
+    self.motis_url = motis_url
 
 class application():
   def __init__(self, debug:bool=False):
@@ -114,12 +117,32 @@ class application():
     else:
       coverletter_text = "`errprint(__program__:__file__:__line__`: fatal error: No positive keywords for coverletter!')m4exit(`1')"
     try:
+      jobdescription = jobdata['title']
+    except KeyError:
+      jobdescription = "% Could not get job description from meta data!"
+    try:
+      company_name = jobdata['hiringOrganization']['name'].replace("&","\&")
+    except KeyError:
+      company_name = "% Could not get the company name from meta data!"
+    try:
+      company_adress = jobdata['jobLocation']['address']['streetAddress']
+    except KeyError:
+      company_adress = "% Could not get Street Address from meta data!"
+    try:
+      company_plz = jobdata['jobLocation']['address']['postalCode']
+    except KeyError:
+      company_plz = "% Could not get postal code from meta data!"
+    try:
+      company_city = jobdata['jobLocation']['address']['addressLocality']
+    except KeyError:
+      company_city = "% Could not get city from meta data!"
+    try:
       m4process = subprocess.run(["m4",
-          '-Djobdescription='+jobdata['title'],
-          '-Dcompany_name='+jobdata['hiringOrganization']['name'].replace("&","\&"),
-          '-Dcompany_adress='+jobdata['jobLocation']['address']['streetAddress'],
-          '-Dcompany_plz='+jobdata['jobLocation']['address']['postalCode'],
-          '-Dcompany_city='+jobdata['jobLocation']['address']['addressLocality'],
+          '-Djobdescription='+jobdescription,
+          '-Dcompany_name='+company_name,
+          '-Dcompany_adress='+company_adress,
+          '-Dcompany_plz='+company_plz,
+          '-Dcompany_city='+company_city,
           '-Dcoverletter_text='+coverletter_text,
           '-Dpositive_keywords='+', '.join(positive_keywords),
           expanduser(self.config.coverletter_m4file)],
@@ -133,6 +156,7 @@ class application():
     bewerbungsfilename = expanduser(self.config.outputpath)+"/Bewerbung"+job_company_filename+".tex"
     with open(bewerbungsfilename, "wb") as bewerbungsfile:
       bewerbungsfile.write(m4process.stdout)
+    return True
 
 
 
