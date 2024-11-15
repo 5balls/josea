@@ -61,9 +61,18 @@ class application():
             if matching_keyword in alternative_sections:
               alternative_sections[matching_keyword].append((coverlettersection.sectionid, number_of_matches))
             else:
-              alternative_sections[matching_keyword] = ((coverlettersection.sectionid, number_of_matches),)
+              alternative_sections[matching_keyword] = [(coverlettersection.sectionid, number_of_matches)]
             matching_texts[coverlettersection.sectionid] = coverlettersection.text
             continue
+        # If we are going to overwrite a previous entry we want to save
+        # it in the alternative sections (We don't have to add it to
+        # matching_texts, because we did already)
+        if matching_keyword in sections:
+          sectionid, matches = sections[matching_keyword]
+          if matching_keyword in alternative_sections:
+            alternative_sections[matching_keyword].append(sections[matching_keyword])
+          else:
+            alternative_sections[matching_keyword] = [sections[matching_keyword]]
         sections[matching_keyword] = (coverlettersection.sectionid, number_of_matches)
         matching_texts[coverlettersection.sectionid] = coverlettersection.text
     outputsections = dict()
@@ -76,9 +85,9 @@ class application():
         outputsections[sectionid] = (comment,text)
       else:
         if number_of_matches == 1:
-          outputsections[sectionid] = ('% ' + str(number_of_matches) + ' match: "' + keyword + '"',matching_texts[sectionid])
+          outputsections[sectionid] = ('% "' + sectionid + '" ' + str(number_of_matches) + ' match: "' + keyword + '"',matching_texts[sectionid])
         else:
-          outputsections[sectionid] = ('% ' + str(number_of_matches) + ' matches: "' + keyword + '"',matching_texts[sectionid])
+          outputsections[sectionid] = ('% "'  + sectionid + '" ' + str(number_of_matches) + ' matches: "' + keyword + '"',matching_texts[sectionid])
     for keyword, alternative_sections_keyword in alternative_sections.items():
       for section in alternative_sections_keyword:
         sectionid = section[0]
@@ -89,9 +98,9 @@ class application():
           outputsections[sectionid] = (comment,text)
         else:
           if number_of_matches == 1:
-            outputsections[sectionid] = ('% Alternative ' + str(number_of_matches) + ' match: "' + keyword + '"',matching_texts[sectionid])
+            outputsections[sectionid] = ('% Alternative "' + sectionid + '" ' + str(number_of_matches) + ' match: "' + keyword + '"',matching_texts[sectionid])
           else:
-            outputsections[sectionid] = ('% Alternative ' + str(number_of_matches) + ' matches: "' + keyword + '"',matching_texts[sectionid])
+            outputsections[sectionid] = ('% Alternative "' + sectionid + '" ' + str(number_of_matches) + ' matches: "' + keyword + '"',matching_texts[sectionid])
     outputtext = ""
     for keyword in positive_keywords:
       if keyword not in covered_keywords:
