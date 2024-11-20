@@ -10,6 +10,7 @@
 
 import sqlite3
 import json
+from os.path import expanduser
 
 class db_config():
   name : str
@@ -230,3 +231,17 @@ def apply_job(self,jobid:int):
   statusid = result.fetchone()
   self.connection.execute("INSERT INTO history (joboffer,status) values (?,?)",(jobid,statusid[0]))
   self.connection.commit()
+
+def construct_filename(self,jobid:int,ending:str,path:str=''):
+  jsonld = self.jsonld(jobid)
+  jobdata = json.loads(jsonld)
+  if 'hiringOrganization' not in jobdata:
+    return False, ''
+  if 'name' not in jobdata['hiringOrganization']:
+    return False, ''
+  if 'title' not in jobdata:
+    return False, ''
+  job_company_filename = ''.join(x for x in jobdata['hiringOrganization']['name'].title() if not x.isspace() and x.isalpha())
+  job_title_filename =  ''.join(x for x in jobdata['title'].title() if not x.isspace() and x.isalpha())
+  return True, expanduser(path) + job_company_filename+'_' + job_title_filename + '.' + ending
+ 

@@ -98,16 +98,16 @@ class application():
           outputsections[sectionid] = (comment,text)
         else:
           if number_of_matches == 1:
-            outputsections[sectionid] = ('% Alternative "' + sectionid + '" ' + str(number_of_matches) + ' match: "' + keyword + '"',matching_texts[sectionid])
+            outputsections[sectionid] = ('% FIXME Alternative "' + sectionid + '" ' + str(number_of_matches) + ' match: "' + keyword + '"',matching_texts[sectionid])
           else:
-            outputsections[sectionid] = ('% Alternative "' + sectionid + '" ' + str(number_of_matches) + ' matches: "' + keyword + '"',matching_texts[sectionid])
+            outputsections[sectionid] = ('% FIXME Alternative "' + sectionid + '" ' + str(number_of_matches) + ' matches: "' + keyword + '"',matching_texts[sectionid])
     outputtext = ""
     for keyword in positive_keywords:
       if keyword not in covered_keywords:
         if outputtext:
           outputtext += ', "' + keyword + '"'
         else:
-          outputtext = '% Uncovered keywords: "' + keyword + '"'
+          outputtext = '% FIXME Uncovered keywords: "' + keyword + '"'
     if outputtext:
       outputtext += '\n'
     for sectionid, outputsection in outputsections.items():
