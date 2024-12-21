@@ -13,6 +13,7 @@ from enum import Enum
 from lxml import html
 import json
 import josea
+import time
 
 class link_rule():
   href_contains : str
@@ -88,6 +89,7 @@ def get_all_links_from_xmlstr(page:str):
 
 def get_all_links_from_webpage(url:dict):
   request = urllib.request.urlopen(url)
+  time.sleep(15)
   page = request.read().decode("utf-8")
   return get_all_links_from_xmlstr(page)
 
@@ -119,6 +121,7 @@ class webpage_action():
         for link in links:
            if self.linkrule.applies(link['href'],link['text']):
              request = urllib.request.urlopen(url)
+             time.sleep(15)
              webpage_action.data = request.read().decode("utf-8")
              return self.set_retval(True)
         self.error = "No link rule applied!"
