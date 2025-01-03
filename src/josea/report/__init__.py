@@ -51,6 +51,10 @@ class report():
     else:
       rst_description += "| " + jobdata['jobLocation']['address']['addressLocality'] + "\n\n"
 
+    if "url" in jobdata:
+      rst_description += self.title("Link von Stellenbörse",1)
+      rst_description += "\n" + jobdata['url'] + "\n\n"
+
     job_positive_tags = []
     job_negative_tags = []
     rst_description += self.title("Automatisierte Bewertung",1)
