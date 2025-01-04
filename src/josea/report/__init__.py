@@ -58,6 +58,8 @@ class report():
     job_positive_tags = []
     job_negative_tags = []
     rst_description += self.title("Automatisierte Bewertung",1)
+    if "datePosted" in jobdata:
+      rst_description += ":Veröffentlichungsdatum:\n "+jobdata['datePosted']+"\n\n"
     distance_json = db.get_evaldata(jobid,"distance_car_km")
     if distance_json:
       rst_description += ":Fahrtdistanz:\n  "+str(json.loads(distance_json[0]))+"km\n\n"
