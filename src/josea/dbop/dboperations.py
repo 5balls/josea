@@ -225,12 +225,19 @@ def discard_job(self,jobid:int):
       obsolete_messageids.append(result.fetchone()[0])
   return obsolete_messageids
 
-def apply_job(self,jobid:int):
-  self.add_note(jobid,"Auf Stelle beworben")
-  result = self.connection.execute("SELECT id FROM statuses WHERE name=?",("applied",))
+def set_status(self,jobid:int,status:str):
+  result = self.connection.execute("SELECT id FROM statuses WHERE name=?",(status,))
   statusid = result.fetchone()
   self.connection.execute("INSERT INTO history (joboffer,status) values (?,?)",(jobid,statusid[0]))
   self.connection.commit()
+
+def apply_job(self,jobid:int):
+  self.add_note(jobid,"Auf Stelle beworben")
+  self.set_status(jobid,"applied")
+
+def rejection_received(self,jobid:int):
+  self.add_note(jobid,"Absage erhalten")
+  self.set_status(jobid,"rejected")
 
 def construct_filename(self,jobid:int,ending:str,path:str=''):
   jsonld = self.jsonld(jobid)

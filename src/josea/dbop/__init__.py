@@ -49,3 +49,7 @@ class db():
   from josea.dbop.dboperations import get_stati_for_daterange
   
   from josea.dbop.dboperations import get_status_name
+  
+  from josea.dbop.dboperations import set_status
+  
+  from josea.dbop.dboperations import discard_job
