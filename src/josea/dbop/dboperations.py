@@ -234,6 +234,12 @@ def set_status(self,jobid:int,status:str):
   self.connection.execute("INSERT INTO history (joboffer,status) values (?,?)",(jobid,statusid[0]))
   self.connection.commit()
 
+def set_status_with_date(self,jobid:int,status:str,date:str):
+  result = self.connection.execute("SELECT id FROM statuses WHERE name=?",(status,))
+  statusid = result.fetchone()
+  self.connection.execute("INSERT INTO history (joboffer,status,time) values (?,?,?)",(jobid,statusid[0],date))
+  self.connection.commit()
+
 def get_history_ids(self,jobid:int):
   result = self.connection.execute("SELECT id FROM history WHERE joboffer=?",(jobid,))
   return result.fetchall()

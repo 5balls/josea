@@ -52,6 +52,8 @@ class db():
   
   from josea.dbop.dboperations import set_status
   
+  from josea.dbop.dboperations import set_status_with_date
+
   from josea.dbop.dboperations import discard_job
 
   from josea.dbop.dboperations import get_jobid_by_string
