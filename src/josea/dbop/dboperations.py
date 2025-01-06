@@ -231,6 +231,25 @@ def set_status(self,jobid:int,status:str):
   self.connection.execute("INSERT INTO history (joboffer,status) values (?,?)",(jobid,statusid[0]))
   self.connection.commit()
 
+def get_history_ids(self,jobid:int):
+  result = self.connection.execute("SELECT id FROM history WHERE joboffer=?",(jobid,))
+  return result.fetchall()
+
+def get_last_history_id(self,jobid:int):
+  history_ids = self.get_history_ids(jobid)
+  if history_ids:
+    return history_ids[-1]
+  else:
+    return None
+
+def get_history_time(self,historyid:int):
+  result = self.connection.execute("SELECT time FROM history WHERE id=?",(historyid,))
+  return result.fetchone()
+
+def get_history_status(self,historyid:int):
+  result = self.connection.execute("SELECT status FROM history WHERE id=?",(historyid,))
+  return result.fetchone()
+
 def apply_job(self,jobid:int):
   self.add_note(jobid,"Auf Stelle beworben")
   self.set_status(jobid,"applied")
@@ -259,3 +278,8 @@ def get_stati_for_daterange(self,firstdatetime,seconddatetime):
 def get_status_name(self,statusid:int):
   result = self.connection.execute("SELECT name FROM statuses WHERE id=?",(statusid,))
   return result.fetchone()
+
+def get_jobid_by_string(self,searchstring:str):
+  result = self.connection.execute("SELECT id FROM joboffers WHERE (lower(company) LIKE '%' || lower(?) || '%') OR (lower(description) LIKE '%' || lower(?) || '%') OR (lower(jsonld) LIKE '%' || lower(?) || '%')",(searchstring,searchstring,searchstring))
+  return result.fetchall()
+  

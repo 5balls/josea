@@ -53,3 +53,14 @@ class db():
   from josea.dbop.dboperations import set_status
   
   from josea.dbop.dboperations import discard_job
+
+  from josea.dbop.dboperations import get_jobid_by_string
+  
+  from josea.dbop.dboperations import get_history_ids
+  
+  from josea.dbop.dboperations import get_last_history_id
+
+  from josea.dbop.dboperations import get_history_time
+  
+  from josea.dbop.dboperations import get_history_status
+
