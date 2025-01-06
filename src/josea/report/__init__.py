@@ -130,8 +130,11 @@ class report():
     except subprocess.CalledProcessError as error:
       return False
     return True
-  def weekly(self):
-    today = datetime.datetime.today()
+  def weekly(self, firstday:str=None):
+    if not firstday:
+      today = datetime.datetime.today()
+    else:
+      today = datetime.datetime.strptime(firstday,"%Y-%m-%d")
     cal = today.isocalendar()
     year = cal.year
     if(cal.weekday == 7):
@@ -139,6 +142,7 @@ class report():
       firstweekday = today - datetime.timedelta(days=cal.weekday-1)
       firstweekday = datetime.datetime.combine(firstweekday,datetime.time.min)
       lastweekday = firstweekday + datetime.timedelta(days=6)
+      lastweekday = datetime.datetime.combine(lastweekday,datetime.time.max)
     else:
       week = cal.week - 1
       firstweekday = today - datetime.timedelta(days=cal.weekday-1+7)
@@ -147,6 +151,8 @@ class report():
       lastweekday = datetime.datetime.combine(lastweekday,datetime.time.max)
       if(week<1):
         week = 1
+
+      
     rst_description = self.title('Bewerbungen ' + self.config.applicant + ' KW ' + str(week) + ' / ' + str(year))
     db = josea.dbop.db()
     stati = db.get_stati_for_daterange(firstweekday,lastweekday)
@@ -159,6 +165,8 @@ class report():
     last_application = 0
     for status in stati:
       jobid = status[0]
+      if not jobid:
+        continue
       statusid = status[1]
       time = datetime.datetime.strptime(status[2],"%Y-%m-%d %H:%M:%S")
       if not (statusid in statidescriptions):
@@ -176,7 +184,20 @@ class report():
             for note in notes:
               discarded_notes += note[1]+ ", "
             discarded_notes = discarded_notes[:-2]
-          rst_discarded += '   "' + jobdata['hiringOrganization']['name'] + '", "' +jobdata['jobLocation']['address']['addressLocality'] + '", "' + jobdata['title'] + '", "' + time.strftime('%d.%m.%Y') + '", "' + discarded_notes + '"\n'
+          company_name = '?'
+          if 'hiringOrganization' in jobdata:
+            if 'name' in jobdata['hiringOrganization']:
+              company_name = jobdata['hiringOrganization']['name']
+          job_location = '?'
+          if 'jobLocation' in jobdata:
+            if 'address' in jobdata['jobLocation']:
+              if 'addressLocality' in jobdata['jobLocation']['address']:
+                job_location = jobdata['jobLocation']['address']['addressLocality']
+          job_title = '?'
+          if 'title' in jobdata:
+            job_title = jobdata['title']
+          #rst_discarded += '   "' + company_name + ' (' + str(jobid)+ ')", "' + job_location + '", "' + job_title + '", "' + time.strftime('%d.%m.%Y') + '", "' + discarded_notes + '"\n'
+          rst_discarded += '   "' + company_name + '", "' + job_location + '", "' + job_title + '", "' + time.strftime('%d.%m.%Y') + '", "' + discarded_notes + '"\n'
       else:
         pass
         #print(jobdata['hiringOrganization']['name'],jobdata['title'],statidescriptions[statusid],status[2])
@@ -191,8 +212,11 @@ class report():
       return False
     return True
 
-  def view_weekly(self):
-    today = datetime.datetime.today()
+  def view_weekly(self,firstday=None):
+    if not firstday:
+      today = datetime.datetime.today()
+    else:
+      today = datetime.datetime.strptime(firstday,"%Y-%m-%d")
     cal = today.isocalendar()
     year = cal.year
     if(cal.weekday == 7):

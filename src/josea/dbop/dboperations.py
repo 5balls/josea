@@ -155,8 +155,11 @@ def add_jobposting(self,jsonld:str,message=None):
 
 def jsonld(self,jobid:int):
   result = self.connection.execute("SELECT jsonld FROM joboffers WHERE id=?",(jobid,))
-  jsonld = result.fetchone()
-  return jsonld[0]
+  jsonld = result.fetchall()
+  if jsonld:
+    return jsonld[-1][0]
+  else:
+    return "{}"
 
 def add_evaldata(self,jobid:int,description:str,data:str):
   result = self.connection.execute("SELECT id from evaldatatypes WHERE description=?",(description,))
