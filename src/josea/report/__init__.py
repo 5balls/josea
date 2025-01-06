@@ -160,6 +160,8 @@ class report():
     rst_applications += '.. csv-table::\n   :header: "Firma", "Ort", "Jobbeschreibung", "Beworben am"\n\n '
     rst_discarded = self.title('Verworfene Stellenausschreibungen',1)
     rst_discarded += '.. csv-table::\n   :header: "Firma", "Ort", "Jobbeschreibung", "Verworfen am", "Notizen"\n\n '
+    rst_rejected = self.title('Abgelehnt',1)
+    rst_rejected += '.. csv-table::\n   :header: "Firma", "Ort", "Jobbeschreibung", "Abgelehnt am"\n\n '
     last_application = 0
     for status in stati:
       jobid = status[0]
@@ -197,11 +199,14 @@ class report():
             job_title = jobdata['title']
           #rst_discarded += '   "' + company_name + ' (' + str(jobid)+ ')", "' + job_location + '", "' + job_title + '", "' + time.strftime('%d.%m.%Y') + '", "' + discarded_notes + '"\n'
           rst_discarded += '   "' + company_name + '", "' + job_location + '", "' + job_title + '", "' + time.strftime('%d.%m.%Y') + '", "' + discarded_notes + '"\n'
+      elif statustext == 'rejected':
+          rst_rejected += '   "' + jobdata['hiringOrganization']['name'] + '", "' +jobdata['jobLocation']['address']['addressLocality'] + '", "' + jobdata['title'] + '", "' + time.strftime('%d.%m.%Y') + '"\n'
       else:
         pass
         #print(jobdata['hiringOrganization']['name'],jobdata['title'],statidescriptions[statusid],status[2])
     rst_description += rst_applications + "\n"
     rst_description += rst_discarded + "\n"
+    rst_description += rst_rejected + "\n"
     weeklyreportfilename = expanduser(self.config.reportpath)+"/Bewerbungen_" +self.config.applicant.replace(" ","_") + "_KW"+str(week).zfill(2) + "_" + str(year) + ".pdf"
     try:
       with open(weeklyreportfilename, "wb") as weeklyreportfile:
