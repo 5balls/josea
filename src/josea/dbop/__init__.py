@@ -66,3 +66,5 @@ class db():
   
   from josea.dbop.dboperations import get_history_status
 
+  from josea.dbop.dboperations import get_last_stati
+

@@ -35,7 +35,7 @@ def connect_or_create_database(self,name:str,debug:bool=False):
     self.connection.commit()
     if debug:
       print("Insert rows in table statuses...")
-    data = [("new",),("applied",),("discarded",),("waitforanswer",),("noanswer",),("rejected",)]
+    data = [("new",),("applied",),("discarded",),("waitforanswer",),("noanswer",),("rejected",),("applicationsend",)]
     self.connection.executemany("INSERT INTO statuses (name) values (?)", data)
     self.connection.commit()
   if ("joboffers",) not in tables:
@@ -282,6 +282,10 @@ def construct_filename(self,jobid:int,ending:str,path:str=''):
 
 def get_stati_for_daterange(self,firstdatetime,seconddatetime):
   result = self.connection.execute("SELECT joboffer,status,time FROM history WHERE time>=? AND time<=?",(firstdatetime,seconddatetime))
+  return result.fetchall()
+
+def get_last_stati(self):
+  result = self.connection.execute("SELECT MAX(id),joboffer,status,time FROM history GROUP BY joboffer ORDER BY time")
   return result.fetchall()
 
 def get_status_name(self,statusid:int):

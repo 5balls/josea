@@ -151,8 +151,6 @@ class report():
       lastweekday = datetime.datetime.combine(lastweekday,datetime.time.max)
       if(week<1):
         week = 1
-
-      
     rst_description = self.title('Bewerbungen ' + self.config.applicant + ' KW ' + str(week) + ' / ' + str(year))
     db = josea.dbop.db()
     stati = db.get_stati_for_daterange(firstweekday,lastweekday)
@@ -173,11 +171,12 @@ class report():
         statidescriptions[statusid] = db.get_status_name(statusid)[0]
       jsonld = db.jsonld(jobid)
       jobdata = json.loads(jsonld)
-      if statidescriptions[statusid] == 'applied':
+      statustext = statidescriptions[statusid]
+      if statustext == 'applied' or statustext == 'waitforanswer' or statustext == 'noanswer' or statustext == 'applicationsend':
         if jobid != last_application:
           rst_applications += '   "' + jobdata['hiringOrganization']['name'] + '", "' +jobdata['jobLocation']['address']['addressLocality'] + '", "' + jobdata['title'] + '", "' + time.strftime('%d.%m.%Y %H:%M') + '"\n'
           last_application = jobid
-      elif statidescriptions[statusid] == 'discarded':
+      elif statustext == 'discarded':
           notes = db.get_notes(jobid)
           discarded_notes = ''
           if notes:
@@ -211,7 +210,6 @@ class report():
       print("Could not execute rst2pdf!")
       return False
     return True
-
   def view_weekly(self,firstday=None):
     if not firstday:
       today = datetime.datetime.today()
@@ -238,3 +236,49 @@ class report():
     except subprocess.CalledProcessError as error:
       return False
     return True
+  def open_appliations(self):
+    rst_description = self.title('Offene Bewerbungen ' + self.config.applicant)
+    db = josea.dbop.db()
+    stati = db.get_last_stati()
+    statidescriptions = dict()
+
+    rst_applications = self.title('Offen',1)
+    rst_applications += '.. csv-table::\n   :header: "DB id", "Firma", "Ort", "Jobbeschreibung", "Status"\n\n '
+    rst_rejected = self.title('Abgelehnt',1)
+    rst_rejected += '.. csv-table::\n   :header: "DB id", "Firma", "Ort", "Jobbeschreibung", "Status"\n\n '
+    for status in stati:
+      jobid = status[1]
+      if not jobid:
+        continue
+      statusid = status[2]
+      time = datetime.datetime.strptime(status[3],"%Y-%m-%d %H:%M:%S")
+      if not (statusid in statidescriptions):
+        statidescriptions[statusid] = db.get_status_name(statusid)[0]
+      jsonld = db.jsonld(jobid)
+      jobdata = json.loads(jsonld)
+      statustext = statidescriptions[statusid]
+      if statustext == 'applied' or statustext == 'waitforanswer' or statustext == 'noanswer' or statustext == 'applicationsend':
+        rst_applications += '   "' + str(jobid) + '", "' + jobdata['hiringOrganization']['name'] + '", "' +jobdata['jobLocation']['address']['addressLocality'] + '", "' + jobdata['title'] + '", "' + time.strftime('%d.%m.%Y %H:%M') + ' ' + statustext + '"\n'
+      elif statustext == 'rejected':
+        rst_rejected += '   "' + str(jobid) + '", "' + jobdata['hiringOrganization']['name'] + '", "' +jobdata['jobLocation']['address']['addressLocality'] + '", "' + jobdata['title'] + '", "' + time.strftime('%d.%m.%Y %H:%M') + ' ' + statustext + '"\n'
+      else:
+        pass
+        #print(jobdata['hiringOrganization']['name'],jobdata['title'],statidescriptions[statusid],status[2])
+    rst_description += rst_applications + "\n"
+    rst_description += rst_rejected + "\n"
+    openreportfilename = expanduser(self.config.reportpath)+"/Offene_Bewerbungen_" +self.config.applicant.replace(" ","_") + ".pdf"
+    try:
+      with open(openreportfilename, "wb") as openreportfile:
+        m4process = subprocess.run(["rst2pdf","-s","/home/flo/bin/json2stelle.yaml"], input=rst_description.encode("utf8"), stdout=openreportfile)
+    except subprocess.CalledProcessError as error:
+      print("Could not execute rst2pdf!")
+      return False
+    return True
+  def view_open_applications(self):
+    openreportfilename = expanduser(self.config.reportpath)+"/Offene_Bewerbungen_" +self.config.applicant.replace(" ","_") + ".pdf"
+    try:
+      subprocess.run(["evince",openreportfilename])
+    except subprocess.CalledProcessError as error:
+      return False
+    return True
+
