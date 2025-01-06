@@ -15,11 +15,16 @@ from os.path import expanduser
 from lxml import html, etree
 import pypandoc
 import subprocess
+import datetime
 
 class report_config():
   path : str
-  def __init__(self, path:str=None):
+  reportpath : str
+  applicant: str
+  def __init__(self, path:str=None, reportpath:str=None, applicant:str=None):
     self.path = path
+    self.reportpath = reportpath
+    self.applicant = applicant
 
 class report():
   def __init__(self, debug:bool=False):
@@ -122,6 +127,90 @@ class report():
     stellenfilename = expanduser(self.config.path)+"/Stelle"+job_company_filename+'_' + job_title_filename + ".pdf"
     try:
       subprocess.run(["evince",stellenfilename])
+    except subprocess.CalledProcessError as error:
+      return False
+    return True
+  def weekly(self):
+    today = datetime.datetime.today()
+    cal = today.isocalendar()
+    year = cal.year
+    if(cal.weekday == 7):
+      week = cal.week
+      firstweekday = today - datetime.timedelta(days=cal.weekday-1)
+      firstweekday = datetime.datetime.combine(firstweekday,datetime.time.min)
+      lastweekday = firstweekday + datetime.timedelta(days=6)
+    else:
+      week = cal.week - 1
+      firstweekday = today - datetime.timedelta(days=cal.weekday-1+7)
+      firstweekday = datetime.datetime.combine(firstweekday,datetime.time.min)
+      lastweekday = firstweekday + datetime.timedelta(days=6)
+      lastweekday = datetime.datetime.combine(lastweekday,datetime.time.max)
+      if(week<1):
+        week = 1
+    rst_description = self.title('Bewerbungen ' + self.config.applicant + ' KW ' + str(week) + ' / ' + str(year))
+    db = josea.dbop.db()
+    stati = db.get_stati_for_daterange(firstweekday,lastweekday)
+    statidescriptions = dict()
+
+    rst_applications = self.title('Bewerbungen',1)
+    rst_applications += '.. csv-table::\n   :header: "Firma", "Ort", "Jobbeschreibung", "Beworben am"\n\n '
+    rst_discarded = self.title('Verworfene Stellenausschreibungen',1)
+    rst_discarded += '.. csv-table::\n   :header: "Firma", "Ort", "Jobbeschreibung", "Verworfen am", "Notizen"\n\n '
+    last_application = 0
+    for status in stati:
+      jobid = status[0]
+      statusid = status[1]
+      time = datetime.datetime.strptime(status[2],"%Y-%m-%d %H:%M:%S")
+      if not (statusid in statidescriptions):
+        statidescriptions[statusid] = db.get_status_name(statusid)[0]
+      jsonld = db.jsonld(jobid)
+      jobdata = json.loads(jsonld)
+      if statidescriptions[statusid] == 'applied':
+        if jobid != last_application:
+          rst_applications += '   "' + jobdata['hiringOrganization']['name'] + '", "' +jobdata['jobLocation']['address']['addressLocality'] + '", "' + jobdata['title'] + '", "' + time.strftime('%d.%m.%Y %H:%M') + '"\n'
+          last_application = jobid
+      elif statidescriptions[statusid] == 'discarded':
+          notes = db.get_notes(jobid)
+          discarded_notes = ''
+          if notes:
+            for note in notes:
+              discarded_notes += note[1]+ ", "
+            discarded_notes = discarded_notes[:-2]
+          rst_discarded += '   "' + jobdata['hiringOrganization']['name'] + '", "' +jobdata['jobLocation']['address']['addressLocality'] + '", "' + jobdata['title'] + '", "' + time.strftime('%d.%m.%Y') + '", "' + discarded_notes + '"\n'
+      else:
+        pass
+        #print(jobdata['hiringOrganization']['name'],jobdata['title'],statidescriptions[statusid],status[2])
+    rst_description += rst_applications + "\n"
+    rst_description += rst_discarded + "\n"
+    weeklyreportfilename = expanduser(self.config.reportpath)+"/Bewerbungen_" +self.config.applicant.replace(" ","_") + "_KW"+str(week).zfill(2) + "_" + str(year) + ".pdf"
+    try:
+      with open(weeklyreportfilename, "wb") as weeklyreportfile:
+        m4process = subprocess.run(["rst2pdf","-s","/home/flo/bin/json2stelle.yaml"], input=rst_description.encode("utf8"), stdout=weeklyreportfile)
+    except subprocess.CalledProcessError as error:
+      print("Could not execute rst2pdf!")
+      return False
+    return True
+
+  def view_weekly(self):
+    today = datetime.datetime.today()
+    cal = today.isocalendar()
+    year = cal.year
+    if(cal.weekday == 7):
+      week = cal.week
+      firstweekday = today - datetime.timedelta(days=cal.weekday-1)
+      firstweekday = datetime.datetime.combine(firstweekday,datetime.time.min)
+      lastweekday = firstweekday + datetime.timedelta(days=6)
+    else:
+      week = cal.week - 1
+      firstweekday = today - datetime.timedelta(days=cal.weekday-1+7)
+      firstweekday = datetime.datetime.combine(firstweekday,datetime.time.min)
+      lastweekday = firstweekday + datetime.timedelta(days=6)
+      lastweekday = datetime.datetime.combine(lastweekday,datetime.time.max)
+      if(week<1):
+        week = 1
+    weeklyreportfilename = expanduser(self.config.reportpath)+"/Bewerbungen_" +self.config.applicant.replace(" ","_") + "_KW"+str(week).zfill(2) + "_" + str(year) + ".pdf"
+    try:
+      subprocess.run(["evince",weeklyreportfilename])
     except subprocess.CalledProcessError as error:
       return False
     return True

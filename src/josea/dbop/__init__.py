@@ -45,3 +45,7 @@ class db():
   from josea.dbop.dboperations import apply_job
 
   from josea.dbop.dboperations import construct_filename
+
+  from josea.dbop.dboperations import get_stati_for_daterange
+  
+  from josea.dbop.dboperations import get_status_name

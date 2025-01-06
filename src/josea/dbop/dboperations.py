@@ -244,4 +244,11 @@ def construct_filename(self,jobid:int,ending:str,path:str=''):
   job_company_filename = ''.join(x for x in jobdata['hiringOrganization']['name'].title() if not x.isspace() and x.isalpha())
   job_title_filename =  ''.join(x for x in jobdata['title'].title() if not x.isspace() and x.isalpha())
   return True, expanduser(path) + job_company_filename+'_' + job_title_filename + '.' + ending
- 
+
+def get_stati_for_daterange(self,firstdatetime,seconddatetime):
+  result = self.connection.execute("SELECT joboffer,status,time FROM history WHERE time>=? AND time<=?",(firstdatetime,seconddatetime))
+  return result.fetchall()
+
+def get_status_name(self,statusid:int):
+  result = self.connection.execute("SELECT name FROM statuses WHERE id=?",(statusid,))
+  return result.fetchone()
