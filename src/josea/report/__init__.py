@@ -282,7 +282,7 @@ class report():
       if statustext == 'applied' or statustext == 'waitforanswer' or statustext == 'noanswer' or statustext == 'applicationsend':
         rst_applications += '   "' + str(jobid) + '", "' + jobdata['hiringOrganization']['name'] + ' (' +jobdata['jobLocation']['address']['addressLocality'] + ')", "' + jobdata['title'] + '", "' + rst_notes + time.strftime('%d.%m.%Y %H:%M') + ' **' + statusinfo + '**"\n'
       elif statustext == 'rejected':
-        rst_rejected += '   "' + str(jobid) + '", "' + jobdata['hiringOrganization']['name'] + '", "' +jobdata['jobLocation']['address']['addressLocality'] + '", "' + jobdata['title'] + '", "' + time.strftime('%d.%m.%Y %H:%M') + ' ' + statustext + '"\n'
+        rst_rejected += '   "' + str(jobid) + '", "' + jobdata['hiringOrganization']['name'] + '", "' +jobdata['jobLocation']['address']['addressLocality'] + '", "' + jobdata['title'] + '", "' + time.strftime('%d.%m.%Y %H:%M') + ' **' + statusinfo + '**"\n'
       else:
         pass
         #print(jobdata['hiringOrganization']['name'],jobdata['title'],statidescriptions[statusid],status[2])
