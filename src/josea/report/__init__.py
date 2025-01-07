@@ -248,7 +248,7 @@ class report():
     statidescriptions = dict()
 
     rst_applications = self.title('Offen',1)
-    rst_applications += '.. csv-table::\n   :header: "DB id", "Firma", "Ort", "Jobbeschreibung", "Status"\n\n '
+    rst_applications += '.. csv-table::\n   :header: "DB id", "Firma", "Jobbeschreibung", "Status"\n   :widths: 10, 30, 30, 30\n\n '
     rst_rejected = self.title('Abgelehnt',1)
     rst_rejected += '.. csv-table::\n   :header: "DB id", "Firma", "Ort", "Jobbeschreibung", "Status"\n\n '
     for status in stati:
@@ -261,9 +261,26 @@ class report():
         statidescriptions[statusid] = db.get_status_name(statusid)[0]
       jsonld = db.jsonld(jobid)
       jobdata = json.loads(jsonld)
+      notes = db.get_notes(jobid)
+      rst_notes = ''
+      if notes:
+          for note in notes:
+            rst_notes += "| " + note[0] + "\n   | " + note[1] + "\n   "
+      rst_notes += "\n   "
       statustext = statidescriptions[statusid]
+      match statustext:
+        case 'applied':
+          statusinfo = 'Bewerbung wird gerade vorbereitet'
+        case 'applicationsend':
+          statusinfo = 'Bewerbung wurde verschickt, noch keine Eingangsbestätigung!'
+        case 'waitforanswer':
+          statusinfo = 'Eingangsbestätigung erhalten, warte auf Entscheidung'
+        case 'rejected':
+          statusinfo = 'Bewerbung abgelehnt'
+        case _:
+          statusinfo = statustext
       if statustext == 'applied' or statustext == 'waitforanswer' or statustext == 'noanswer' or statustext == 'applicationsend':
-        rst_applications += '   "' + str(jobid) + '", "' + jobdata['hiringOrganization']['name'] + '", "' +jobdata['jobLocation']['address']['addressLocality'] + '", "' + jobdata['title'] + '", "' + time.strftime('%d.%m.%Y %H:%M') + ' ' + statustext + '"\n'
+        rst_applications += '   "' + str(jobid) + '", "' + jobdata['hiringOrganization']['name'] + ' (' +jobdata['jobLocation']['address']['addressLocality'] + ')", "' + jobdata['title'] + '", "' + rst_notes + time.strftime('%d.%m.%Y %H:%M') + ' **' + statusinfo + '**"\n'
       elif statustext == 'rejected':
         rst_rejected += '   "' + str(jobid) + '", "' + jobdata['hiringOrganization']['name'] + '", "' +jobdata['jobLocation']['address']['addressLocality'] + '", "' + jobdata['title'] + '", "' + time.strftime('%d.%m.%Y %H:%M') + ' ' + statustext + '"\n'
       else:
